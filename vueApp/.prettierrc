@@ -1,0 +1,13 @@
+{
+  "semi": true, // 语句末尾加分号
+  "singleQuote": true, // 使用单引号
+  "printWidth": 100, // 每行最大长度
+  "tabWidth": 2, // tab宽度
+  "trailingComma": "es5" // 尾随逗号
+}
+// prettier配置说明：
+// semi: 语句末尾加分号
+// singleQuote: 使用单引号
+// printWidth: 每行最大长度
+// tabWidth: tab宽度
+// trailingComma: 尾随逗号 
