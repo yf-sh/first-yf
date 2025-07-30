@@ -1,0 +1,325 @@
+@import 'variables';
+@import 'mixins';
+
+// 全局样式
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-family;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: $bg-secondary;
+  color: $text-primary;
+  line-height: 1.6;
+}
+
+.App {
+  min-height: 100vh;
+  @include flex-column;
+}
+
+// 导航样式
+.navigation {
+  background-color: $bg-dark;
+  box-shadow: $shadow-sm;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  
+  .nav-container {
+    @include container;
+    @include flex-between;
+    height: $navbar-height;
+    
+    @include mobile {
+      @include flex-column;
+      height: auto;
+      padding: $spacing-md $spacing-xl;
+    }
+  }
+  
+  .nav-brand {
+    a {
+      color: $text-white;
+      text-decoration: none;
+      font-size: $font-size-2xl;
+      font-weight: bold;
+      transition: color $transition-base;
+      
+      &:hover {
+        color: $primary-color;
+      }
+    }
+  }
+  
+  .nav-menu {
+    @include flex-center;
+    list-style: none;
+    gap: $spacing-xl;
+    
+    @include mobile {
+      margin-top: $spacing-md;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+  
+  .nav-item {
+    a {
+      color: $text-light;
+      text-decoration: none;
+      padding: $spacing-sm $spacing-md;
+      border-radius: $border-radius-sm;
+      transition: all $transition-base;
+      
+      &:hover {
+        color: $text-white;
+        background-color: rgba($text-white, 0.1);
+      }
+    }
+    
+    &.active a {
+      color: $primary-color;
+      background-color: rgba($primary-color, 0.1);
+    }
+  }
+}
+
+// 主内容区域
+.main-content {
+  flex: 1;
+  @include container;
+  padding: $spacing-3xl $spacing-xl;
+  width: 100%;
+  
+  @include mobile {
+    padding: $spacing-xl $spacing-md;
+  }
+}
+
+// 页面通用样式
+.page-base {
+  @include card-base;
+  @include fade-in;
+  
+  @include mobile {
+    padding: $spacing-xl;
+  }
+  
+  h1 {
+    @include text-heading;
+    margin-bottom: $spacing-xl;
+    font-size: $font-size-4xl;
+    
+    @include mobile {
+      font-size: $font-size-3xl;
+    }
+  }
+  
+  p {
+    @include text-body;
+    margin-bottom: $spacing-2xl;
+    font-size: $font-size-lg;
+  }
+}
+
+.home-page,
+.about-page,
+.user-management-page,
+.redux-demo-page {
+  @extend .page-base;
+}
+
+// 首页特性列表
+.features {
+  margin-top: $spacing-2xl;
+  
+  h2 {
+    @include text-heading;
+    margin-bottom: $spacing-xl;
+    font-size: $font-size-3xl;
+  }
+  
+  ul {
+    list-style: none;
+  }
+  
+  li {
+    padding: $spacing-md 0;
+    color: $text-primary;
+    font-size: $font-size-lg;
+    border-bottom: 1px solid $border-color;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+// 关于页面技术栈网格
+.tech-stack {
+  margin-top: $spacing-2xl;
+  
+  h2 {
+    @include text-heading;
+    margin-bottom: $spacing-xl;
+    font-size: $font-size-3xl;
+  }
+  
+  .tech-grid {
+    @include grid-auto-fit(250px);
+    margin-top: $spacing-xl;
+    
+    @include mobile {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .tech-item {
+    background-color: $bg-light;
+    padding: $spacing-xl;
+    border-radius: $border-radius-lg;
+    border-left: 4px solid $primary-color;
+    @include card-hover;
+    
+    h3 {
+      @include text-heading;
+      margin-bottom: $spacing-md;
+      font-size: $font-size-xl;
+    }
+    
+    p {
+      @include text-body;
+      margin: 0;
+    }
+  }
+}
+
+// 登录页面样式
+.login-page {
+  @include flex-column-center;
+  min-height: calc(100vh - #{$navbar-height});
+  background-color: $bg-secondary;
+  
+  .login-container {
+    @include card-base;
+    @include fade-in;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: $shadow-md;
+    
+    h1 {
+      @include text-heading;
+      margin-bottom: $spacing-md;
+      font-size: $font-size-3xl;
+    }
+    
+    p {
+      @include text-body;
+      margin-bottom: $spacing-2xl;
+    }
+  }
+  
+  .login-form-wrapper {
+    margin-top: $spacing-2xl;
+  }
+}
+
+// 404 页面样式
+.not-found-page {
+  @include flex-column-center;
+  min-height: calc(100vh - #{$navbar-height});
+  background-color: $bg-secondary;
+  
+  .not-found-container {
+    @include card-base;
+    @include fade-in;
+    text-align: center;
+    max-width: 500px;
+    box-shadow: $shadow-md;
+    
+    h1 {
+      font-size: $font-size-6xl;
+      color: $accent-color;
+      margin-bottom: $spacing-xl;
+      font-weight: bold;
+    }
+    
+    h2 {
+      @include text-heading;
+      margin-bottom: $spacing-xl;
+      font-size: $font-size-3xl;
+    }
+    
+    p {
+      @include text-body;
+      margin-bottom: $spacing-2xl;
+      font-size: $font-size-lg;
+    }
+  }
+  
+  .actions {
+    @include flex-center;
+    gap: $spacing-md;
+    
+    @include mobile {
+      @include flex-column;
+    }
+  }
+}
+
+// 按钮样式
+.btn {
+  @include button-base;
+  
+  &-primary {
+    @include button-primary;
+  }
+  
+  &-secondary {
+    @include button-secondary;
+  }
+  
+  &-outline {
+    @include button-outline;
+  }
+}
+
+// 工具类
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: $spacing-sm; }
+.mb-2 { margin-bottom: $spacing-md; }
+.mb-3 { margin-bottom: $spacing-lg; }
+.mb-4 { margin-bottom: $spacing-xl; }
+.mb-5 { margin-bottom: $spacing-2xl; }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: $spacing-sm; }
+.mt-2 { margin-top: $spacing-md; }
+.mt-3 { margin-top: $spacing-lg; }
+.mt-4 { margin-top: $spacing-xl; }
+.mt-5 { margin-top: $spacing-2xl; }
+
+.p-0 { padding: 0; }
+.p-1 { padding: $spacing-sm; }
+.p-2 { padding: $spacing-md; }
+.p-3 { padding: $spacing-lg; }
+.p-4 { padding: $spacing-xl; }
+.p-5 { padding: $spacing-2xl; } 

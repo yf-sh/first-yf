@@ -1,11 +1,12 @@
-import './App.css'
+import React from 'react';
 
+
+import './styles/index.scss';
 function App() {
   return (
-    <div className="App">
-      <h1>Hello React + TypeScript</h1>
-    </div>
-  )
+   <> 
+   </>
+  );
 }
 
-export default App
+export default App;

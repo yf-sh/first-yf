@@ -1,10 +1,11 @@
 <script setup lang="ts">
 // 组件逻辑
+import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
   <div id="app">
-    <h1>Hello Vue 3 + TypeScript</h1>
+    <RouterView></RouterView>
   </div>
 </template>
 

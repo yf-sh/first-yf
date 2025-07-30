@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('api:server');
 var http = require('http');
+var connectDB = require('../config/database');
 
 /**
  * Get port from environment and store in Express.
@@ -14,6 +15,16 @@ var http = require('http');
 
 var port = normalizePort(process.env.PORT || '9527');
 app.set('port', port);
+
+/**
+ * Connect to MongoDB
+ */
+connectDB().then(() => {
+  console.log('数据库连接已建立');
+}).catch((err) => {
+  console.error('数据库连接失败:', err);
+  process.exit(1);
+});
 
 /**
  * Create HTTP server.

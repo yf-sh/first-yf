@@ -2,51 +2,53 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 // 用户等级配置
-const LEVEL_CONFIG = {
-  1: { name: '新手', exp: 0, benefits: ['基础功能'] },
-  2: { name: '初级', exp: 100, benefits: ['基础功能', '评论功能'] },
-  3: { name: '中级', exp: 500, benefits: ['基础功能', '评论功能', '上传视频'] },
-  4: { name: '高级', exp: 1000, benefits: ['基础功能', '评论功能', '上传视频', '直播功能'] },
-  5: { name: '专家', exp: 2000, benefits: ['所有功能', '优先推荐'] }
-};
+const USER_LEVEL= [
+  { level: 1, name: '小白', exp: 0, benefits: ['内容浏览','评论功能'] },
+  { level: 2, name: '初级', exp: 1000, benefits: ['内容浏览', '评论功能','发布帖子'] },
+  { level: 3, name: '中级', exp: 5000, benefits: ['内容浏览', '评论功能','发布帖子', '上传视频'] },
+  { level: 4, name: '高级', exp: 10000, benefits: ['内容浏览', '评论功能','发布帖子', '上传视频', '直播功能'] },
+  { level: 5, name: '专家', exp: 20000, benefits: ['所有功能', '优先推荐'] }
+];
 
 // 会员类型配置
-const MEMBERSHIP_TYPES = {
-  basic: { name: '基础会员', price: 19.9, benefits: ['无广告', '高清视频'] },
-  premium: { name: '高级会员', price: 39.9, benefits: ['无广告', '高清视频', '专属客服'] },
-  vip: { name: 'VIP会员', price: 99.9, benefits: ['所有权益', '优先审核', '专属标识'] }
-};
+const MEMBER_TYPES = [
+  { type: 'vip', name: '社区会员', benefits: ['专属标识','VIP内容浏览'] }
+];
 
 const userSchema = new mongoose.Schema({
-  // 基本信息
+  // 用户名
   username: {
     type: String,
     required: true,
     unique: true,
     trim: true,
     minlength: 3,
-    maxlength: 20
+    maxlength: 16
   },
+  // 邮箱
   email: {
     type: String,
-    required: true,
-    unique: true,
+    default: null,
     lowercase: true
   },
+  // 密码
   password: {
     type: String,
     required: true,
     minlength: 6
   },
+  // 昵称
   nickname: {
     type: String,
     trim: true,
-    maxlength: 30
+    maxlength: 20
   },
+  // 头像
   avatar: {
     type: String,
     default: '/uploads/default-avatar.png'
   },
+  // 简介
   bio: {
     type: String,
     maxlength: 200
@@ -69,7 +71,7 @@ const userSchema = new mongoose.Schema({
   membership: {
     type: {
       type: String,
-      enum: Object.keys(MEMBERSHIP_TYPES),
+      enum: MEMBER_TYPES.map(m => m.type),
       default: null
     },
     startDate: Date,
@@ -80,16 +82,7 @@ const userSchema = new mongoose.Schema({
     }
   },
 
-  // 角色权限
-  role: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Role',
-    default: null
-  },
-  permissions: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Permission'
-  }],
+
 
   // 统计信息
   stats: {
@@ -144,9 +137,10 @@ userSchema.methods.addExperience = async function(exp) {
   this.experience += exp;
   
   // 检查是否升级
-  for (let level = 5; level > this.level; level--) {
-    if (this.experience >= LEVEL_CONFIG[level].exp) {
-      this.level = level;
+  for (let i = USER_LEVEL.length - 1; i >= 0; i--) {
+    const levelConfig = USER_LEVEL[i];
+    if (this.experience >= levelConfig.exp && this.level < levelConfig.level) {
+      this.level = levelConfig.level;
       break;
     }
   }
@@ -164,9 +158,19 @@ userSchema.methods.checkMembership = function() {
 };
 
 // 静态方法：获取等级配置
-userSchema.statics.getLevelConfig = () => LEVEL_CONFIG;
+userSchema.statics.getLevelConfig = () => USER_LEVEL;
 
 // 静态方法：获取会员类型配置
-userSchema.statics.getMembershipTypes = () => MEMBERSHIP_TYPES;
+userSchema.statics.getMembershipTypes = () => MEMBER_TYPES;
+
+// 新增：根据等级获取配置
+userSchema.statics.getLevelConfigByLevel = (level) => {
+  return USER_LEVEL.find(config => config.level === level);
+};
+
+// 新增：根据会员类型获取配置
+userSchema.statics.getMembershipConfigByType = (type) => {
+  return MEMBER_TYPES.find(membership => membership.type === type);
+};
 
 module.exports = mongoose.model('User', userSchema); 
