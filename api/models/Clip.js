@@ -49,3 +49,5 @@ const clipSchema = new mongoose.Schema({
         enum: ['待审核', '待发布','草稿箱','已发布','已删除'],
     }
 })
+
+module.exports = mongoose.model('Clip', clipSchema);

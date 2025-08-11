@@ -8,8 +8,10 @@ import Mine from '../pages_home二级路由/Mine';
 import Home from '../pages/Home';
 import UserManagement from '../pages/UserManagement';
 
-import Login from '../pages/Login';
+import Login from '../pages/login';
 import NotFound from '../pages/NotFound';
+import ProtectedRoute from '../components/ProtectedRoute';
+import Setting from '../pages_home二级路由/Mine/setting';
 
 const Router = createBrowserRouter([
   
@@ -19,7 +21,11 @@ const Router = createBrowserRouter([
   },
   {
     path:'/home',
-    element:<Home />,
+    element:(
+      <ProtectedRoute>
+        <Home />
+      </ProtectedRoute>
+    ),
     children:[
       {
         path:'/home/first',
@@ -37,15 +43,27 @@ const Router = createBrowserRouter([
         path:'/home/mine',
         element:<Mine />
       },
+      {
+        path:'/home/mine/setting',
+        element:<Setting />
+      },
     ]
   },
   {
     path:'/users',
-    element:<UserManagement />
+    element:(
+      <ProtectedRoute>
+        <UserManagement />
+      </ProtectedRoute>
+    )
   },
   {
     path:'/login',
-    element:<Login />
+    element:(
+      <ProtectedRoute>
+        <Login />
+      </ProtectedRoute>
+    )
   },
   {
     path:'*',

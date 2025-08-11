@@ -26,18 +26,23 @@ export interface ApiError {
 // 创建axios实例
 
 const BASE_URL = '/api';
-let token = localStorage.getItem('token')
+
 // 创建 axios 实例
 const instance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL||BASE_URL,
   timeout: 10000, // 超时时间 10 秒
   withCredentials: true // 跨域请求时携带 cookie
 });
+
+// 导入tokenManager来设置拦截器
+import tokenManager from './utils/tokenManager';
+
 // 请求拦截器
 instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // 添加token
-    if (token && config.headers) {
+    // 手动添加token
+    const token = tokenManager.getAccessToken();
+    if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
 
@@ -79,9 +84,8 @@ instance.interceptors.response.use(
       // 特殊状态码处理
       switch (data.code) {
         case 401:
-          // 未授权，跳转到登录页
-          localStorage.removeItem('token');
-          window.location.href = '/login';
+          // 未授权，由tokenManager处理
+          // 不在这里处理，避免与tokenManager冲突
           break;
         case 403:
           // 权限不足
@@ -124,8 +128,11 @@ instance.interceptors.response.use(
             message: '未授权，请重新登录',
             data,
           };
-          localStorage.removeItem('token');
-          window.location.href = '/login';
+          // 清除token并跳转到登录页
+          tokenManager.clearTokens();
+          if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+          }
           break;
         case 403:
           apiError = {
@@ -205,6 +212,15 @@ export const request = {
     return response.data;
   },
 
+  put: async <T = any>(url: string, data?: any, config?: RequestConfig): Promise<ApiResponse<T>> => {
+    const response = await retryRequest<T>({ ...config, method: 'PUT', url, data });
+    return response.data;
+  },
+
+  delete: async <T = any>(url: string, config?: RequestConfig): Promise<ApiResponse<T>> => {
+    const response = await retryRequest<T>({ ...config, method: 'DELETE', url });
+    return response.data;
+  },
 
   // 通用请求方法
   request: async <T = any>(config: RequestConfig): Promise<ApiResponse<T>> => {

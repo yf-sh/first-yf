@@ -1,0 +1,66 @@
+@import '../styles/variables.scss';
+
+.home-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: $bg-light;
+
+  .home-header {
+    background: $bg-primary;
+    padding: $spacing-lg;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: $shadow-sm;
+    border-bottom: 1px solid $border-color;
+
+    h1 {
+      margin: 0;
+      font-size: $font-size-lg;
+      color: $text-primary;
+      font-weight: 600;
+    }
+  }
+
+  .home-content {
+    flex: 1;
+    padding: $spacing-lg;
+    overflow-y: auto;
+  }
+
+  .home-footer {
+    background: $bg-primary;
+    border-top: 1px solid $border-color;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+
+    :global(.adm-tab-bar) {
+      border-top: none;
+    }
+
+    :global(.adm-tab-bar-item) {
+      color: $text-secondary;
+      
+      &:global(.adm-tab-bar-item-active) {
+        color: $primary-color;
+      }
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: $breakpoint-sm) {
+  .home-page {
+    .home-header {
+      padding: $spacing-md;
+
+      h1 {
+        font-size: $font-size-base;
+      }
+    }
+
+    .home-content {
+      padding: $spacing-md;
+    }
+  }
+} 

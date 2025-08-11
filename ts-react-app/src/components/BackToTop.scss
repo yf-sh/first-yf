@@ -1,0 +1,100 @@
+.back-to-top-btn {
+  position: fixed;
+  bottom: 60px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  z-index: 999;
+  opacity: 0.9;
+  transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  outline: none;
+  
+  // 初始动画
+  animation: slideInUp 0.3s ease-out;
+  
+  &:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    background: rgba(255, 255, 255, 0.95);
+  }
+  
+  &:active {
+    transform: translateY(-1px) scale(0.85);
+    background: rgba(240, 240, 240, 0.9);
+  }
+  
+  &:focus-visible {
+    outline: 2px solid #ff6b9d;
+    outline-offset: 2px;
+  }
+  
+  .back-to-top-icon {
+    color: #888;
+    font-size: 16px;
+    transition: color 0.2s ease;
+  }
+  
+  &:hover .back-to-top-icon {
+    color: #666;
+  }
+}
+
+// 入场动画
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+  }
+  to {
+    opacity: 0.9;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// 响应式适配
+@media (max-width: 375px) {
+  .back-to-top-btn {
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    
+    .back-to-top-icon {
+      font-size: 14px;
+    }
+  }
+}
+
+// 深色模式支持
+@media (prefers-color-scheme: dark) {
+  .back-to-top-btn {
+    background: rgba(40, 40, 40, 0.85);
+    border-color: rgba(255, 255, 255, 0.1);
+    
+    .back-to-top-icon {
+      color: #ccc;
+    }
+    
+    &:hover {
+      background: rgba(60, 60, 60, 0.9);
+      
+      .back-to-top-icon {
+        color: #fff;
+      }
+    }
+    
+    &:active {
+      background: rgba(80, 80, 80, 0.9);
+    }
+  }
+} 

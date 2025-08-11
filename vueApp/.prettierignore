@@ -1,6 +1,0 @@
-# 忽略构建产物和依赖
-node_modules
-build
-dist
-coverage
-public 

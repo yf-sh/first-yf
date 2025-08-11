@@ -41,8 +41,11 @@ const userSchema = new mongoose.Schema({
   nickname: {
     type: String,
     trim: true,
-    maxlength: 20
+    maxlength: 20,
+    default: ''
   },
+  // 存储refresh token
+  refreshToken: String,
   // 头像
   avatar: {
     type: String,
@@ -50,7 +53,7 @@ const userSchema = new mongoose.Schema({
   },
   // 简介
   bio: {
-    type: String,
+    type: String,  
     maxlength: 200
   },
 
@@ -61,6 +64,7 @@ const userSchema = new mongoose.Schema({
     min: 1,
     max: 5
   },
+  // 积分
   experience: {
     type: Number,
     default: 0,
@@ -74,8 +78,8 @@ const userSchema = new mongoose.Schema({
       enum: MEMBER_TYPES.map(m => m.type),
       default: null
     },
-    startDate: Date,
-    endDate: Date,
+    // startDate: Date,
+    // endDate: Date,
     isActive: {
       type: Boolean,
       default: false
@@ -94,11 +98,11 @@ const userSchema = new mongoose.Schema({
   },
 
   // 状态
-  status: {
-    type: String,
-    enum: ['active', 'suspended', 'banned'],
-    default: 'active'
-  },
+  // status: {
+  //   type: String,
+  //   enum: ['active', 'suspended', 'banned'],
+  //   default: 'active'
+  // },
 
   // 时间戳
   lastLoginAt: Date,
@@ -172,5 +176,8 @@ userSchema.statics.getLevelConfigByLevel = (level) => {
 userSchema.statics.getMembershipConfigByType = (type) => {
   return MEMBER_TYPES.find(membership => membership.type === type);
 };
+let Usermodel=mongoose.model("users",userSchema,"users")
 
-module.exports = mongoose.model('User', userSchema); 
+module.exports={
+    Usermodel
+}
