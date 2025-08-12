@@ -2,12 +2,12 @@ var express = require('express');
 var expressWs = require('express-ws');
 var router = express.Router();
 expressWs(router);
-
+let {Usermodel}=require('../models/User')
 // 确保路由器支持 WebSocket
 if (typeof router.ws !== 'function') {
     console.warn('WebSocket support not available on router');
 }
-let {Usermodel}=require('../models/User')
+
 const nodemailer = require('nodemailer');
 const { 
     generateAccessToken, 
@@ -765,4 +765,35 @@ router.get('/follow-stats/:userId?', authenticateToken, async (req, res) => {
     }
 });
 
+// 获取用户信息
+router.get('/info', async function(req, res, next) {
+    try {
+      let {_id} = req.query;
+      
+      // 参数验证
+      if (!_id) {
+        return res.json({code: 400, msg: '用户ID不能为空'});
+      }
+      
+      // 清理ID参数，移除可能的引号
+      const cleanId = String(_id).replace(/['"]/g, '');
+      
+      // 验证ID格式（MongoDB ObjectId 是24位十六进制字符串）
+      if (!/^[0-9a-fA-F]{24}$/.test(cleanId)) {
+        return res.json({code: 400, msg: '无效的用户ID格式'});
+      }
+      
+      console.log('查询用户ID:', cleanId);
+      let user = await Usermodel.findById(cleanId);
+      
+      if (!user) {
+        return res.json({code: 404, msg: '用户不存在'});
+      }
+      
+      res.json({code: 200, msg: '获取用户信息成功', data: user});
+    } catch (error) {
+      console.error('获取用户信息错误:', error);
+      res.json({code: 500, msg: '服务器错误'});
+    }
+  })
 module.exports = router;

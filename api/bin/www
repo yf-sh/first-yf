@@ -33,6 +33,18 @@ connectDB().then(() => {
 var server = http.createServer(app);
 
 /**
+ *  Socket.IO 
+ */
+// 引入socketio
+var SocketIOService = require('../utils/socketio');
+// 创建socketio服务实例
+var socketIOService = new SocketIOService(server);
+
+// 设置Socket.IO服务实例到路由中
+var { setWebSocketService } = require('../routes/websocket'); 
+setWebSocketService(socketIOService);
+
+/**
  * Listen on provided port, on all network interfaces.
  */
 

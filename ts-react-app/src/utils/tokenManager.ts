@@ -157,16 +157,25 @@ class TokenManager {
     }
 
     // 验证token是否有效
-    public async verifyToken(): Promise<boolean> {
+    public async verifyToken(): Promise<{code:number,data:any}> {
         try {
             const token = this.getAccessToken();
             if (!token) {
-                return false;
+                return {
+                    code:401,
+                    data:null
+                };
             }
             const response = await axios.get('http://localhost:9527/api/users/verify-token');
-            return response.data.code === 200;
+            return {
+                code:response.data.code,
+                data:response.data.data
+            };
         } catch (error) {
-            return false;
+            return {
+                code:500,
+                data:null
+            };
         }
     }
 

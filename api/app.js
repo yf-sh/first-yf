@@ -11,6 +11,10 @@ var clipsRouter = require('./routes/clips');
 var rolesRouter = require('./routes/roles');
 var managersRouter = require('./routes/managers');
 var permissionsRouter = require('./routes/permissions');
+var websocketModule = require('./routes/websocket');
+var websocketRouter = websocketModule.router;
+var setWebSocketService = websocketModule.setWebSocketService;
+var messagesRouter = require('./routes/messages');
 var connectDB = require('./config/database');
 
 require('dotenv').config();
@@ -18,6 +22,13 @@ var cors = require('cors');
 
 var app = express();
 
+// 连接数据库
+connectDB().then(() => {
+  console.log('数据库连接成功，应用启动中...');
+}).catch(err => {
+  console.error('数据库连接失败:', err);
+  process.exit(1);
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,6 +48,8 @@ app.use('/api/clips', clipsRouter);
 app.use('/api/roles', rolesRouter);
 app.use('/api/managers', managersRouter);
 app.use('/api/permissions', permissionsRouter);
+app.use('/api/websocket', websocketRouter);
+app.use('/api/messages', messagesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

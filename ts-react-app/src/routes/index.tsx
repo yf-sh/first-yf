@@ -4,11 +4,12 @@ import FIrst from '../pages_home二级路由/First';
 import Create from '../pages_home二级路由/Create';
 import Message from '../pages_home二级路由/Message';
 import Mine from '../pages_home二级路由/Mine';
+import Chat from '../pages/Chat';
 // 页面组件
 import Home from '../pages/Home';
 import UserManagement from '../pages/UserManagement';
 
-import Login from '../pages/login';
+import Login from '../pages/Login';
 import NotFound from '../pages/NotFound';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Setting from '../pages_home二级路由/Mine/setting';
@@ -68,7 +69,15 @@ const Router = createBrowserRouter([
   {
     path:'*',
     element:<NotFound />
-  }
+  },
+  {
+    path:'/chat',
+    element:<Chat/>
+  },
+  {
+    path:'/chat/:targetUserId',
+    element:<Chat/>
+  },
   
 ])
 
