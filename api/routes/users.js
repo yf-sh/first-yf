@@ -2,16 +2,16 @@ var express = require('express');
 var expressWs = require('express-ws');
 var router = express.Router();
 expressWs(router);
-let {Usermodel}=require('../models/User')
+let { Usermodel } = require('../models/User')
 // 确保路由器支持 WebSocket
 if (typeof router.ws !== 'function') {
     console.warn('WebSocket support not available on router');
 }
 
 const nodemailer = require('nodemailer');
-const { 
-    generateAccessToken, 
-    generateRefreshToken, 
+const {
+    generateAccessToken,
+    generateRefreshToken,
     verifyRefreshToken
 } = require('../utils/jwt');
 const { authenticateToken, optionalAuth } = require('../middleware/auth');
@@ -37,11 +37,11 @@ const defaultEmailConfig = {
 
 // 生成随机验证码
 function generateVerificationCode() {
-  let code = '';
-  for (let i = 0; i < 6; i++) {
-    code += Math.floor(Math.random() * 10); // 生成0-9的随机数字
-  }
-  return code;
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+        code += Math.floor(Math.random() * 10); // 生成0-9的随机数字
+    }
+    return code;
 }
 
 // 验证码存储 (带过期时间)
@@ -64,7 +64,7 @@ setInterval(cleanExpiredCodes, 5 * 60 * 1000);
 async function sendVerificationEmail(senderEmail, senderAuthCode, receiverEmail, code) {
     // 创建动态传输器
     const transporter = createEmailTransporter(senderEmail, senderAuthCode);
-    
+
     const mailOptions = {
         from: senderEmail, // 发送方邮箱（用户自己的QQ邮箱）
         to: receiverEmail, // 接收方邮箱（通常与发送方相同）
@@ -91,7 +91,7 @@ async function sendVerificationEmail(senderEmail, senderAuthCode, receiverEmail,
             </div>
         `,
     };
-    
+
     try {
         const info = await transporter.sendMail(mailOptions);
         console.log(`邮件发送成功到 ${receiverEmail}: `, info.messageId);
@@ -105,39 +105,39 @@ async function sendVerificationEmail(senderEmail, senderAuthCode, receiverEmail,
 // 发送验证码的 API 路由（支持动态QQ邮箱）
 router.post('/send-verification', async (req, res) => {
     const { email, authCode } = req.body;
-    
+
     if (!email) {
         return res.status(400).json({ message: '邮箱地址不能为空' });
     }
-    
+
     // 验证是否为QQ邮箱
     if (!email.match(/^\d+@qq\.com$/)) {
         return res.status(400).json({ message: '请输入有效的QQ邮箱地址' });
     }
-    
+
     // 检查授权码（可选）
     // 如果没有提供授权码，将使用默认邮箱发送到目标邮箱
     // 如果提供了授权码，将使用用户自己的邮箱发送
-    
+
     // 检查是否频繁发送验证码 (60秒内不能重复发送)
     const existingCode = verificationCodes[email];
     if (existingCode && (existingCode.expires - Date.now()) > 9 * 60 * 1000) {
         const remainingTime = Math.ceil((existingCode.expires - Date.now() - 9 * 60 * 1000) / 1000);
-        return res.status(400).json({ 
-            message: `请等待 ${remainingTime} 秒后再重新发送验证码` 
+        return res.status(400).json({
+            message: `请等待 ${remainingTime} 秒后再重新发送验证码`
         });
     }
-    
+
     const verificationCode = generateVerificationCode();
     // 存储验证码，设置10分钟过期时间
     verificationCodes[email] = {
         code: verificationCode,
         expires: Date.now() + 10 * 60 * 1000 // 10分钟后过期
     };
-    
+
     // 确定发送方邮箱和授权码
     let senderEmail, senderAuthCode;
-    
+
     if (email === defaultEmailConfig.email || !authCode) {
         // 使用默认配置发送到目标邮箱
         senderEmail = defaultEmailConfig.email;
@@ -147,12 +147,12 @@ router.post('/send-verification', async (req, res) => {
         senderEmail = email;
         senderAuthCode = authCode;
     }
-    
+
     const isSent = await sendVerificationEmail(senderEmail, senderAuthCode, email, verificationCode);
-    
+
     if (isSent) {
         console.log(`验证码已发送到 ${email}: ${verificationCode}`); // 开发调试用，生产环境请删除
-        res.json({ 
+        res.json({
             message: `验证码已发送到 ${email}，请查收邮箱`,
             sender: senderEmail !== email ? `邮件由 ${senderEmail} 发送` : '邮件由本邮箱发送'
         });
@@ -164,23 +164,23 @@ router.post('/send-verification', async (req, res) => {
 // 验证验证码的 API 路由
 router.post('/verify-code', (req, res) => {
     const { email, code } = req.body;
-    
+
     if (!email || !code) {
         return res.send({ code: 400, msg: '邮箱和验证码不能为空' });
     }
-    
+
     const storedData = verificationCodes[email];
-    
+
     if (!storedData) {
         return res.send({ code: 400, msg: '验证码不存在或已过期' });
     }
-    
+
     // 检查是否过期
     if (Date.now() > storedData.expires) {
         delete verificationCodes[email];
         return res.send({ code: 400, msg: '验证码已过期，请重新获取' });
     }
-    
+
     // 验证码匹配
     if (code === storedData.code) {
         // 验证成功，清除验证码
@@ -194,39 +194,39 @@ router.post('/verify-code', (req, res) => {
 // 登录接口
 router.post('/login', async (req, res) => {
     let { email, username, password } = req.body;
-    
+
     if (!email && !username) {
         res.send({ code: 400, msg: '用户名或邮箱不能为空' });
         return;
     }
-    
+
     try {
         const user = await Usermodel.findOne(email ? { email } : { username });
         if (!user) {
             res.send({ code: 400, msg: '用户名或邮箱不存在' });
             return;
         }
-        
+
         // 验证密码（使用User模型的comparePassword方法）
         const isPasswordValid = await user.comparePassword(password);
         if (!isPasswordValid) {
             res.send({ code: 400, msg: '密码错误' });
             return;
         }
-        
+
         // 生成双token
         const accessToken = generateAccessToken(user._id, user.username);
         const refreshToken = generateRefreshToken(user._id, user.username);
-        
+
         // 更新用户的refresh token和最后登录时间
         await Usermodel.updateOne(
             { _id: user._id },
-            { 
+            {
                 refreshToken: refreshToken,
                 lastLogin: new Date()
             }
         );
-        
+
         // 设置cookie（可选）
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
@@ -234,7 +234,7 @@ router.post('/login', async (req, res) => {
             sameSite: 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7天
         });
-        
+
         res.send({
             code: 200,
             msg: '登录成功',
@@ -257,7 +257,7 @@ router.post('/login', async (req, res) => {
 // 注册接口
 router.post('/register', async (req, res) => {
     let { username, password, email } = req.body;
-    
+
     try {
         // 检查用户是否已存在
         let existingUser = await Usermodel.findOne({ username });
@@ -265,21 +265,21 @@ router.post('/register', async (req, res) => {
             res.send({ code: 400, msg: '用户名已存在' });
             return;
         }
-        
+
         // 检查邮箱是否已存在
         existingUser = await Usermodel.findOne({ email });
         if (existingUser) {
             res.send({ code: 400, msg: '邮箱已被注册' });
             return;
         }
-        
+
         // 创建新用户（密码会在User模型的pre('save')中间件中自动加密）
         await Usermodel.create({
             username,
             password: password,  // 传入原始密码，让模型自动处理加密
             email
         });
-        
+
         res.send({ code: 200, msg: '注册成功' });
     } catch (error) {
         console.error('注册错误:', error);
@@ -290,26 +290,26 @@ router.post('/register', async (req, res) => {
 // 修改密码
 router.post('/change-password', async (req, res) => {
     let { email, newPassword } = req.body;
-    
+
     try {
         const user = await Usermodel.findOne({ email });
         if (!user) {
             res.send({ code: 400, msg: '用户不存在' });
             return;
         }
-        
+
         // 加密新密码
         const hashedPassword = await hashPassword(newPassword);
-        
+
         // 更新密码并清除refresh token（强制重新登录）
         await Usermodel.updateOne(
             { email },
-            { 
+            {
                 password: hashedPassword,
                 refreshToken: null
             }
         );
-        
+
         res.send({ code: 200, msg: '密码修改成功，请重新登录' });
     } catch (error) {
         console.error('修改密码错误:', error);
@@ -320,28 +320,28 @@ router.post('/change-password', async (req, res) => {
 // 刷新Access Token
 router.post('/refresh-token', async (req, res) => {
     const { refreshToken } = req.body;
-    
+
     if (!refreshToken) {
         return res.status(400).json({ code: 400, msg: '需要刷新令牌' });
     }
-    
+
     try {
         // 验证refresh token
         const decoded = verifyRefreshToken(refreshToken);
-        
+
         // 检查用户是否存在且token匹配
-        const user = await Usermodel.findOne({ 
+        const user = await Usermodel.findOne({
             _id: decoded.userId,
             refreshToken: refreshToken
         });
-        
+
         if (!user) {
             return res.status(401).json({ code: 401, msg: '无效的刷新令牌' });
         }
-        
+
         // 生成新的access token
         const newAccessToken = generateAccessToken(user._id, user.username);
-        
+
         res.json({
             code: 200,
             msg: '令牌刷新成功',
@@ -368,10 +368,10 @@ router.post('/logout', authenticateToken, async (req, res) => {
             { _id: req.user.userId },
             { refreshToken: null }
         );
-        
+
         // 清除cookie
         res.clearCookie('refreshToken');
-        
+
         res.json({ code: 200, msg: '登出成功' });
     } catch (error) {
         console.error('登出错误:', error);
@@ -386,7 +386,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
         if (!user) {
             return res.status(404).json({ code: 404, msg: '用户不存在' });
         }
-        
+
         res.json({
             code: 200,
             data: user
@@ -413,7 +413,7 @@ router.get('/verify-token', authenticateToken, (req, res) => {
 router.post('/add-experience', authenticateToken, async (req, res) => {
     try {
         const { amount, reason } = req.body;
-        
+
         if (!amount || amount <= 0) {
             return res.status(400).json({ code: 400, msg: '经验值必须大于0' });
         }
@@ -425,13 +425,13 @@ router.post('/add-experience', authenticateToken, async (req, res) => {
 
         const oldLevel = user.level;
         const oldExperience = user.experience;
-        
+
         // 使用模型的 addExperience 方法
         await user.addExperience(amount);
-        
+
         const newLevel = user.level;
         const levelUp = newLevel > oldLevel;
-        
+
         res.json({
             code: 200,
             msg: levelUp ? `恭喜升级到 LV${newLevel}!` : '经验值增加成功',
@@ -475,16 +475,16 @@ router.get('/level-info', authenticateToken, async (req, res) => {
         const levelConfig = Usermodel.getLevelConfig();
         const currentLevelConfig = levelConfig.find(config => config.level === user.level);
         const nextLevelConfig = levelConfig.find(config => config.level === user.level + 1);
-        
+
         // 计算升级进度
         let progress = 0;
         let expToNext = 0;
-        
+
         if (nextLevelConfig) {
             const currentLevelExp = currentLevelConfig ? currentLevelConfig.exp : 0;
             const nextLevelExp = nextLevelConfig.exp;
             const userExp = user.experience;
-            
+
             expToNext = nextLevelExp - userExp;
             progress = ((userExp - currentLevelExp) / (nextLevelExp - currentLevelExp) * 100).toFixed(1);
         } else {
@@ -520,19 +520,19 @@ router.post('/follow/:userId', optionalAuth, async (req, res) => {
             followerId = '689563de58c2ae35f622e453'; // 测试用户ID
             console.log('使用测试关注者ID:', followerId);
         }
-        
+
         const followingId = req.params.userId; // 被关注者ID
-        
+
         console.log('关注请求 - 关注者:', followerId, '被关注者:', followingId);
-        
+
         // 不能关注自己
         if (followerId === followingId) {
             return res.status(400).json({ code: 400, msg: '不能关注自己' });
         }
-        
+
         // 检查被关注的用户是否存在
         let userToFollow;
-        
+
         // 首先检查是否是有效的ObjectId格式
         const mongoose = require('mongoose');
         if (mongoose.Types.ObjectId.isValid(followingId)) {
@@ -542,7 +542,7 @@ router.post('/follow/:userId', optionalAuth, async (req, res) => {
             // 如果不是有效的ObjectId，按用户名查找
             userToFollow = await Usermodel.findOne({ username: followingId });
         }
-        
+
         // 如果是测试用户且不存在，则创建一个测试用户
         if (!userToFollow && followingId.startsWith('test-user-')) {
             console.log('创建测试用户:', followingId);
@@ -561,12 +561,12 @@ router.post('/follow/:userId', optionalAuth, async (req, res) => {
             });
             await userToFollow.save();
         }
-        
+
         if (!userToFollow) {
             console.log('被关注用户不存在:', followingId);
             return res.status(404).json({ code: 404, msg: `被关注的用户不存在: ${followingId}` });
         }
-        
+
         // 检查关注者是否存在
         let follower = await Usermodel.findById(followerId);
         if (!follower) {
@@ -588,22 +588,22 @@ router.post('/follow/:userId', optionalAuth, async (req, res) => {
             await follower.save();
             console.log('测试关注者创建成功');
         }
-        
+
         console.log('用户存在，更新统计信息...');
-        
+
         // 更新统计数据
         await Usermodel.updateOne(
             { _id: followerId },
             { $inc: { 'stats.following': 1 } }
         );
-        
+
         await Usermodel.updateOne(
             { _id: userToFollow._id },
             { $inc: { 'stats.followers': 1 } }
         );
-        
+
         console.log('关注成功');
-        
+
         res.json({
             code: 200,
             msg: '关注成功',
@@ -636,14 +636,14 @@ router.delete('/follow/:userId', optionalAuth, async (req, res) => {
             followerId = '689563de58c2ae35f622e453'; // 测试用户ID
             console.log('使用测试关注者ID:', followerId);
         }
-        
+
         const followingId = req.params.userId; // 被取消关注者ID
-        
+
         console.log('取消关注请求 - 关注者:', followerId, '被取消关注者:', followingId);
-        
+
         // 检查被取消关注的用户是否存在
         let userToUnfollow;
-        
+
         // 首先检查是否是有效的ObjectId格式
         const mongoose = require('mongoose');
         if (mongoose.Types.ObjectId.isValid(followingId)) {
@@ -653,7 +653,7 @@ router.delete('/follow/:userId', optionalAuth, async (req, res) => {
             // 如果不是有效的ObjectId，按用户名查找
             userToUnfollow = await Usermodel.findOne({ username: followingId });
         }
-        
+
         // 如果是测试用户且不存在，则创建一个测试用户
         if (!userToUnfollow && followingId.startsWith('test-user-')) {
             console.log('创建测试用户:', followingId);
@@ -672,12 +672,12 @@ router.delete('/follow/:userId', optionalAuth, async (req, res) => {
             });
             await userToUnfollow.save();
         }
-        
+
         if (!userToUnfollow) {
             console.log('被取消关注用户不存在:', followingId);
             return res.status(404).json({ code: 404, msg: `被取消关注的用户不存在: ${followingId}` });
         }
-        
+
         let follower = await Usermodel.findById(followerId);
         if (!follower) {
             console.log('关注者不存在，创建测试关注者:', followerId);
@@ -698,22 +698,22 @@ router.delete('/follow/:userId', optionalAuth, async (req, res) => {
             await follower.save();
             console.log('测试关注者创建成功');
         }
-        
+
         console.log('用户存在，更新统计信息...');
-        
+
         // 更新统计数据（确保不会变成负数）
         await Usermodel.updateOne(
             { _id: followerId, 'stats.following': { $gt: 0 } },
             { $inc: { 'stats.following': -1 } }
         );
-        
+
         await Usermodel.updateOne(
             { _id: userToUnfollow._id, 'stats.followers': { $gt: 0 } },
             { $inc: { 'stats.followers': -1 } }
         );
-        
+
         console.log('取消关注成功');
-        
+
         res.json({
             code: 200,
             msg: '取消关注成功',
@@ -738,12 +738,12 @@ router.delete('/follow/:userId', optionalAuth, async (req, res) => {
 router.get('/follow-stats/:userId?', authenticateToken, async (req, res) => {
     try {
         const userId = req.params.userId || req.user.userId;
-        
+
         const user = await Usermodel.findById(userId).select('stats username nickname');
         if (!user) {
             return res.status(404).json({ code: 404, msg: '用户不存在' });
         }
-        
+
         res.json({
             code: 200,
             data: {
@@ -766,34 +766,157 @@ router.get('/follow-stats/:userId?', authenticateToken, async (req, res) => {
 });
 
 // 获取用户信息
-router.get('/info', async function(req, res, next) {
+router.get('/info', async function (req, res, next) {
     try {
-      let {_id} = req.query;
-      
-      // 参数验证
-      if (!_id) {
-        return res.json({code: 400, msg: '用户ID不能为空'});
-      }
-      
-      // 清理ID参数，移除可能的引号
-      const cleanId = String(_id).replace(/['"]/g, '');
-      
-      // 验证ID格式（MongoDB ObjectId 是24位十六进制字符串）
-      if (!/^[0-9a-fA-F]{24}$/.test(cleanId)) {
-        return res.json({code: 400, msg: '无效的用户ID格式'});
-      }
-      
-      console.log('查询用户ID:', cleanId);
-      let user = await Usermodel.findById(cleanId);
-      
-      if (!user) {
-        return res.json({code: 404, msg: '用户不存在'});
-      }
-      
-      res.json({code: 200, msg: '获取用户信息成功', data: user});
+        let { _id } = req.query;
+
+        // 参数验证
+        if (!_id) {
+            return res.json({ code: 400, msg: '用户ID不能为空' });
+        }
+
+        // 清理ID参数，移除可能的引号
+        const cleanId = String(_id).replace(/['"]/g, '');
+
+        // 验证ID格式（MongoDB ObjectId 是24位十六进制字符串）
+        if (!/^[0-9a-fA-F]{24}$/.test(cleanId)) {
+            return res.json({ code: 400, msg: '无效的用户ID格式' });
+        }
+
+        console.log('查询用户ID:', cleanId);
+        let user = await Usermodel.findById(cleanId);
+
+        if (!user) {
+            return res.json({ code: 404, msg: '用户不存在' });
+        }
+
+        res.json({ code: 200, msg: '获取用户信息成功', data: user });
     } catch (error) {
-      console.error('获取用户信息错误:', error);
-      res.json({code: 500, msg: '服务器错误'});
+        console.error('获取用户信息错误:', error);
+        res.json({ code: 500, msg: '服务器错误' });
     }
-  })
+})
+
+
+// 用户信息编辑（用户编辑信息，审核员审核）
+router.post('/edit', function (req, res, next) {
+    res.send('respond with a resource');
+});
+
+// 用户信息删除（超级管理员）
+router.post('/delete', function (req, res, next) {
+    res.send('respond with a resource');
+});
+
+// 获取用户列表
+router.get('/list', async function (req, res, next) {
+    try {
+        const { page = 1, pageSize = 10, keyword = '' } = req.query;
+        const skip = (page - 1) * pageSize;
+
+        // 构建查询条件
+        let query = {};
+        if (keyword) {
+            query.$or = [
+                { username: { $regex: keyword, $options: 'i' } },
+                { nickname: { $regex: keyword, $options: 'i' } },
+                { email: { $regex: keyword, $options: 'i' } }
+            ];
+        }
+
+        // 获取总数
+        const total = await Usermodel.countDocuments(query);
+
+        // 获取用户列表
+        const users = await Usermodel.find(query)
+            .select('-password -refreshToken') // 排除敏感字段
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(parseInt(pageSize));
+
+        res.json({
+            code: 200,
+            msg: '获取成功',
+            data: {
+                list: users,
+                total,
+                page: parseInt(page),
+                pageSize: parseInt(pageSize),
+                totalPages: Math.ceil(total / pageSize)
+            }
+        });
+    } catch (error) {
+        console.error('获取用户列表错误:', error);
+        res.json({ code: 500, msg: '服务器错误' });
+    }
+});
+
+// 获取用户详情
+router.get('/detail/:id', async function (req, res, next) {
+    try {
+        const { id } = req.params;
+        const user = await Usermodel.findById(id).select('-password -refreshToken');
+
+        if (!user) {
+            return res.json({ code: 404, msg: '用户不存在' });
+        }
+
+        res.json({
+            code: 200,
+            msg: '获取成功',
+            data: user
+        });
+    } catch (error) {
+        console.error('获取用户详情错误:', error);
+        res.json({ code: 500, msg: '服务器错误' });
+    }
+});
+
+// 删除用户
+router.delete('/:id', async function (req, res, next) {
+    try {
+        const { id } = req.params;
+        const user = await Usermodel.findByIdAndDelete(id);
+
+        if (!user) {
+            return res.json({ code: 404, msg: '用户不存在' });
+        }
+
+        res.json({
+            code: 200,
+            msg: '删除成功',
+            data: null
+        });
+    } catch (error) {
+        console.error('删除用户错误:', error);
+        res.json({ code: 500, msg: '服务器错误' });
+    }
+});
+
+// 更新用户状态
+router.put('/:id/status', async function (req, res, next) {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        const user = await Usermodel.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        ).select('-password -refreshToken');
+
+        if (!user) {
+            return res.json({ code: 404, msg: '用户不存在' });
+        }
+
+        res.json({
+            code: 200,
+            msg: '更新成功',
+            data: user
+        });
+    } catch (error) {
+        console.error('更新用户状态错误:', error);
+        res.json({ code: 500, msg: '服务器错误' });
+    }
+});
 module.exports = router;

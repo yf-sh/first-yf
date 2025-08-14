@@ -28,8 +28,8 @@ export default function Chat() {
     console.log('====================================');
     console.log(targetUserId, '用户id');
     console.log('====================================');
-    // token
-    const token = localStorage.getItem('token')
+    // 使用tokenManager获取token，确保token获取方式统一
+    const token = tokenManager.getAccessToken()
     // 用户id
     const [userId, setUserId] = useState<any>(null)
     let [targetUser, setTargetUser] = useState<any>(null)
@@ -55,6 +55,9 @@ export default function Chat() {
         isIncoming: false,
         offer: null
     })
+    // 通话状态：'idle' | 'calling' | 'incoming' | 'connected'
+    const [callStatus, setCallStatus] = useState<'idle' | 'calling' | 'incoming' | 'connected'>('idle')
+
 
 
     //通过检查 localStorage 中的 token 来判断用户是否已登录
@@ -121,12 +124,14 @@ export default function Chat() {
         }
 
         try {
-            // 从 localStorage 获取 token
-            const token = localStorage.getItem('token')
+            // 从 tokenManager 获取 token
+            const token = tokenManager.getAccessToken()
             if (!token) {
                 console.error('未找到认证 token')
                 return
             }
+
+            console.log('开始连接Socket.IO，token:', token.substring(0, 20) + '...')
 
             // 创建 Socket.IO 客户端
             const socketIOClient = createSocketIOClient({
@@ -197,21 +202,62 @@ export default function Chat() {
                     console.log('收到来电:', data)
                     // 设置通话类型和状态
                     setCallType(data.callType || 'audio')
+                    setCallStatus('incoming') // 设置为来电状态
                     setIncomingCallInfo({
                         isIncoming: true,
                         offer: data.offer
                     })
-                    // 存储来电者信息
-                    setTargetUser(data.fromUser)
+                    
+                    // 根据拨打方ID获取用户信息
+                    if (data.fromUserId) {
+                        UserService.getUserInfo(data.fromUserId).then(userInfo => {
+                            console.log('获取到来电者信息:', userInfo)
+                            setTargetUser(userInfo)
+                        }).catch(error => {
+                            console.error('获取来电者信息失败:', error)
+                            // 设置默认信息
+                            setTargetUser({
+                                _id: data.fromUserId,
+                                username: data.fromUsername || '未知用户',
+                                nickname: data.fromUsername || '未知用户',
+                                avatar: '/uploads/default-avatar.png'
+                            })
+                        })
+                    } else {
+                        // 如果没有fromUserId，尝试使用fromUser
+                        setTargetUser(data.fromUser || {
+                            _id: 'unknown',
+                            username: '未知用户',
+                            nickname: '未知用户',
+                            avatar: '/uploads/default-avatar.png'
+                        })
+                    }
+                    
                     setIsInCall(true)
                 }
 
                 // 处理通话响应事件
                 const handleCallResponse = (data: any) => {
                     console.log('收到通话响应:', data)
-                    // 如果对方拒绝通话，结束通话
-                    if (!data.accepted) {
+                    if (data.accepted) {
+                        // 对方接受通话，更新通话状态为"通话中"
+                        console.log('对方已接受通话，通话建立成功')
+                        setCallStatus('connected') // 设置为通话中状态
+                        console.log('通话已建立，显示通话界面')
+                        // 确保 isInCall 状态为 true，保持通话界面
+                        if (!isInCall) {
+                            setIsInCall(true)
+                            console.log('设置 isInCall 为 true，保持通话界面')
+                        }
+                    } else {
+                        // 对方拒绝通话，结束通话
+                        console.log('对方拒绝通话，结束通话')
+                        setCallStatus('idle') // 重置为空闲状态
                         setIsInCall(false)
+                        setIncomingCallInfo({
+                            isIncoming: false,
+                            offer: null
+                        })
                     }
                 }
 
@@ -224,7 +270,12 @@ export default function Chat() {
                 // 处理通话结束事件
                 const handleCallEnd = (data: any) => {
                     console.log('通话结束:', data)
+                    setCallStatus('idle') // 重置为空闲状态
                     setIsInCall(false)
+                    setIncomingCallInfo({
+                        isIncoming: false,
+                        offer: null
+                    })
                 }
 
                 // 注册事件监听器
@@ -305,11 +356,23 @@ export default function Chat() {
 
             // 设置通话类型和状态
             setCallType('audio')
+            setCallStatus('calling') // 设置为正在呼叫状态
             setIncomingCallInfo({
                 isIncoming: false,
                 offer: null
             })
             setIsInCall(true)
+
+            // 发送通话请求给目标用户
+            if (socketIOClientRef.current) {
+                console.log('发送音频通话请求给用户:', targetUserId)
+                // 创建一个临时的 offer（实际会在 VideoCall 组件中创建真实的 offer）
+                const tempOffer = {
+                    type: 'offer',
+                    sdp: 'temp-sdp'
+                }
+                socketIOClientRef.current.sendCallRequest(targetUserId, tempOffer, 'audio')
+            }
         } catch (error) {
             console.error('申请音频权限失败:', error)
             if (error instanceof Error) {
@@ -334,47 +397,57 @@ export default function Chat() {
         }
 
         try {
-            // 立即申请音视频权限
-            console.log('正在申请音视频权限...')
+            // 只申请音频权限，视频权限等待用户主动开启
+            console.log('正在申请音频权限...')
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: true,
-                video: {
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 }
-                }
+                video: false // 不获取视频
             })
-            console.log('音视频权限申请成功')
+            console.log('音频权限申请成功')
 
             // 立即停止流，避免占用设备
             stream.getTracks().forEach(track => track.stop())
 
             // 设置通话类型和状态
             setCallType('video')
+            setCallStatus('calling') // 设置为正在呼叫状态
             setIncomingCallInfo({
                 isIncoming: false,
                 offer: null
             })
             setIsInCall(true)
+
+            // 发送通话请求给目标用户
+            if (socketIOClientRef.current) {
+                console.log('发送视频通话请求给用户:', targetUserId)
+                // 创建一个临时的 offer（实际会在 VideoCall 组件中创建真实的 offer）
+                const tempOffer = {
+                    type: 'offer',
+                    sdp: 'temp-sdp'
+                }
+                socketIOClientRef.current.sendCallRequest(targetUserId, tempOffer, 'video')
+            }
         } catch (error) {
-            console.error('申请音视频权限失败:', error)
+            console.error('申请音频权限失败:', error)
             if (error instanceof Error) {
                 if (error.name === 'NotAllowedError') {
-                    alert('需要摄像头和麦克风权限才能进行视频通话，请在浏览器设置中允许访问摄像头和麦克风')
+                    alert('需要麦克风权限才能进行视频通话，请在浏览器设置中允许访问麦克风')
                 } else if (error.name === 'NotFoundError') {
-                    alert('未找到摄像头或麦克风设备，请检查设备连接')
+                    alert('未找到麦克风设备，请检查设备连接')
                 } else if (error.name === 'NotReadableError') {
-                    alert('摄像头或麦克风被其他应用占用，请关闭其他应用后重试')
+                    alert('麦克风被其他应用占用，请关闭其他应用后重试')
                 } else {
-                    alert(`申请音视频权限失败: ${error.message}`)
+                    alert(`申请音频权限失败: ${error.message}`)
                 }
             } else {
-                alert('申请音视频权限失败，请检查设备权限设置')
+                alert('申请音频权限失败，请检查设备权限设置')
             }
         }
     }
 
     // 结束通话
     const handleCallEnd = () => {
+        setCallStatus('idle') // 重置为空闲状态
         setIsInCall(false)
         setIncomingCallInfo({
             isIncoming: false,
@@ -463,21 +536,25 @@ export default function Chat() {
                 console.error('获取目标用户信息失败:', error);
             }
         };
+        
         // 初始化聊天
         initializeChat();
 
-        // 只有在用户已登录时才连接 Socket.IO
-        if (isUserStatus) {
+        // 只有在用户已登录且未连接时才连接 Socket.IO
+        if (isUserStatus && !socketIOClientRef.current) {
+            console.log('准备连接Socket.IO...')
             connectSocketIO()
         }
 
         // 组件卸载时断开连接
         return () => {
             if (socketIOClientRef.current) {
+                console.log('组件卸载，断开Socket.IO连接')
                 socketIOClientRef.current.disconnect()
+                socketIOClientRef.current = null
             }
         }
-    }, [isUserStatus, targetUserId])
+    }, [isUserStatus, targetUserId]) // 移除isConnected依赖，避免循环
     // 创建 ref 用于关联 TextField 组件，指定类型为 HTMLInputElement 以修复 TypeScript 错误
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -602,6 +679,8 @@ export default function Chat() {
                 setInputMessage(prev => prev + e.native)
             }} /> : null}
 
+           
+
             {/* 音视频通话组件 */}
             {isInCall && targetUserId && (
                 <VideoCall
@@ -611,6 +690,7 @@ export default function Chat() {
                     onCallEnd={handleCallEnd}
                     isIncoming={incomingCallInfo.isIncoming}
                     incomingOffer={incomingCallInfo.offer}
+                    callStatus={callStatus}
                 />
             )}
 

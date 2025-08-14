@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import './index.scss'
 import img1 from '../../assets/images/1.gif'
 // 导入socketio
@@ -27,8 +27,8 @@ interface Notification {
 export default function Message() {
   // 路由跳转
   const toNav = useNavigate();
-  // token - 使用正确的token键名
-  const token = localStorage.getItem('token') || localStorage.getItem('refreshToken')
+  // 使用tokenManager获取token，确保token获取方式正确
+  const token = tokenManager.getAccessToken()
   // 获取当前用户
   let [userId,setUserId] = useState<string>('')
   // 标签切换
@@ -45,6 +45,14 @@ export default function Message() {
   const [error, setError] = useState<string | null>(null)
   // 连接重试次数
   const [retryCount, setRetryCount] = useState(0)
+  // 下拉刷新相关状态
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const [startY, setStartY] = useState(0)
+  const [currentY, setCurrentY] = useState(0)
+  const [pullDistance, setPullDistance] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
+  // 触摸事件节流相关
+  const touchMoveThrottleRef = useRef<number | null>(null)
 
 
 
@@ -351,6 +359,10 @@ const getUserId = async () => {
     // 组件卸载时断开连接
     return () => {
       disconnectSocketIO()
+      // 清理触摸事件相关的定时器
+      if (touchMoveThrottleRef.current) {
+        cancelAnimationFrame(touchMoveThrottleRef.current)
+      }
     }
   }, [])
 
@@ -436,37 +448,76 @@ const getUserId = async () => {
     toNav(`/chat/${conversation.userId}`)
   }
 
-  // 刷新会话列表
-  const handleRefreshConversations = async () => {
-    if (!userId) {
-      console.error('用户ID未设置，无法刷新会话')
+  // 下拉刷新处理函数
+  const handlePullToRefresh = async () => {
+    if (!userId || isRefreshing) {
       return
     }
     
     try {
-      setLoading(true)
-      await fetchConversations(userId)
-      console.log('会话列表刷新成功')
+      setIsRefreshing(true)
+      console.log('开始下拉刷新...')
+      
+      // 同时刷新会话列表和系统消息
+      await Promise.all([
+        fetchConversations(userId),
+        fetchSystemMessages(userId)
+      ])
+      
+      console.log('下拉刷新完成')
     } catch (error) {
-      console.error('刷新会话列表失败:', error)
+      console.error('下拉刷新失败:', error)
     } finally {
-      setLoading(false)
+      setIsRefreshing(false)
     }
   }
 
-  // 刷新系统消息
-  const handleRefreshSystemMessages = async () => {
-    if (!userId) {
-      console.error('用户ID未设置，无法刷新系统消息')
-      return
+  // 触摸开始事件
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (containerRef.current && containerRef.current.scrollTop === 0) {
+      setStartY(e.touches[0].clientY)
+      setCurrentY(e.touches[0].clientY)
+    }
+  }
+
+  // 触摸移动事件
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (startY > 0 && containerRef.current && containerRef.current.scrollTop === 0) {
+      const touchY = e.touches[0].clientY
+      const distance = Math.max(0, touchY - startY)
+      
+      if (distance > 0) {
+        // 使用节流来减少触摸移动事件的频率，避免过多的状态更新
+        if (touchMoveThrottleRef.current) {
+          return
+        }
+        
+        touchMoveThrottleRef.current = requestAnimationFrame(() => {
+          setPullDistance(distance)
+          setCurrentY(touchY)
+          touchMoveThrottleRef.current = null
+        })
+      }
+    }
+  }
+
+  // 触摸结束事件
+  const handleTouchEnd = () => {
+    // 清理触摸移动的节流定时器
+    if (touchMoveThrottleRef.current) {
+      cancelAnimationFrame(touchMoveThrottleRef.current)
+      touchMoveThrottleRef.current = null
     }
     
-    try {
-      await fetchSystemMessages(userId)
-      console.log('系统消息刷新成功')
-    } catch (error) {
-      console.error('刷新系统消息失败:', error)
+    if (pullDistance > 80) {
+      // 触发刷新
+      handlePullToRefresh()
     }
+    
+    // 重置触摸状态
+    setStartY(0)
+    setCurrentY(0)
+    setPullDistance(0)
   }
 
   // 重新连接Socket.IO
@@ -528,37 +579,7 @@ const getUserId = async () => {
             </span>
           )}
        
-          <button 
-            onClick={handleRefreshConversations}
-            style={{
-              marginLeft: '10px',
-              padding: '4px 8px',
-              fontSize: '12px',
-              background: '#1890ff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-            disabled={loading}
-          >
-            刷新会话
-          </button>
-          <button 
-            onClick={handleRefreshSystemMessages}
-            style={{
-              marginLeft: '10px',
-              padding: '4px 8px',
-              fontSize: '12px',
-              background: '#52c41a',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            刷新系统消息
-          </button>
+
         </div>
       </div>
 
@@ -586,7 +607,51 @@ const getUserId = async () => {
         </div>
       </div>
       {/* 内容区域 */}
-      <div className="message-content">
+      <div 
+        className="message-content"
+        ref={containerRef}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* 下拉刷新指示器 */}
+        {pullDistance > 0 && (
+          <div 
+            className="pull-refresh-indicator"
+            style={{
+              height: `${Math.min(pullDistance, 80)}px`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: '#f5f5f5',
+              color: '#666',
+              fontSize: '14px',
+              transition: 'height 0.2s ease'
+            }}
+          >
+            {pullDistance > 80 ? '释放刷新' : '下拉刷新'}
+          </div>
+        )}
+        
+        {/* 刷新中指示器 */}
+        {isRefreshing && (
+          <div 
+            className="refreshing-indicator"
+            style={{
+              height: '50px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: '#f0f8ff',
+              color: '#1890ff',
+              fontSize: '14px'
+            }}
+          >
+            <div className="loading-spinner" style={{ marginRight: '8px' }}></div>
+            刷新中...
+          </div>
+        )}
+        
         {loading ? (
           <div className="loading">
             <div className="loading-spinner"></div>

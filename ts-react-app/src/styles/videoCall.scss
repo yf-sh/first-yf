@@ -4,7 +4,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.8); // 调整为更深的背景，确保视频可见
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -18,7 +18,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #000;
+    background-color: transparent; // 确保背景透明
     border-radius: 12px;
     overflow: hidden;
 
@@ -28,12 +28,13 @@
       object-fit: cover;
       border-radius: 12px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      background-color: #000;
+      background-color: #000; // 设置黑色背景，避免透明问题
       
       // 确保视频元素可见
       display: block;
       min-width: 100%;
       min-height: 100%;
+      z-index: 1; // 确保视频在最上层
     }
 
     .corner-video-container {
@@ -45,8 +46,8 @@
       border-radius: 8px;
       border: 3px solid #fff;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-      z-index: 10;
-      background-color: #333;
+      z-index: 10; // 确保右上角视频在最上层
+      background-color: #000; // 设置黑色背景
       cursor: pointer;
       transition: all 0.3s ease;
       overflow: hidden;
@@ -65,29 +66,11 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        background-color: #333;
+        background-color: #000; // 设置黑色背景
         display: block;
         min-width: 120px;
         min-height: 90px;
-      }
-
-      .swap-hint {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        font-size: 10px;
-        text-align: center;
-        padding: 2px 4px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: none;
-      }
-
-      &:hover .swap-hint {
-        opacity: 1;
+        z-index: 1; // 确保视频在最上层
       }
     }
   }
@@ -96,6 +79,7 @@
     text-align: center;
     margin: 20px 0;
     color: white;
+    z-index: 5; // 确保信息显示在视频之上
 
     h3 {
       font-size: 24px;
@@ -139,6 +123,7 @@
     align-items: center;
     justify-content: center;
     margin-top: 20px;
+    z-index: 5; // 确保控制按钮在视频之上
 
     .adm-button {
       width: 60px;

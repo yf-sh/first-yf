@@ -1,9 +1,19 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const dotenv = require('dotenv');
 
-// JWT密钥配置
-const ACCESS_TOKEN_SECRET = 'your-access-token-secret-key-2024';
-const REFRESH_TOKEN_SECRET = 'your-refresh-token-secret-key-2024';
+// 确保环境变量被加载
+dotenv.config();
+
+// JWT密钥配置 - 使用正确的环境变量
+const ACCESS_TOKEN_SECRET = process.env.JWT_SECRET;
+const REFRESH_TOKEN_SECRET = process.env.JWT_SECRET;
+
+// 验证密钥是否存在
+if (!ACCESS_TOKEN_SECRET) {
+    console.error('错误: JWT_SECRET 环境变量未设置');
+    process.exit(1);
+}
 
 // Token过期时间配置
 const ACCESS_TOKEN_EXPIRES_IN = '15m'; // 15分钟
@@ -49,7 +59,7 @@ const verifyRefreshToken = (token) => {
     try {
         return jwt.verify(token, REFRESH_TOKEN_SECRET);
     } catch (error) {
-        throw new Error('无效的访问令牌');
+        throw new Error('无效的刷新令牌');
     }
 };
 

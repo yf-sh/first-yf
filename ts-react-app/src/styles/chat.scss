@@ -170,4 +170,70 @@
       padding: 10px;
     }
   }
+
+  // 通话状态显示样式
+  .call-status-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+
+    .call-status-content {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+      .call-status-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        animation: pulse 1.5s infinite;
+      }
+
+      .call-status-text {
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 25px;
+        font-weight: 500;
+      }
+
+      .call-cancel-btn {
+        background: #f44336;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+
+        &:hover {
+          background: #d32f2f;
+        }
+      }
+    }
+  }
+
+  // 脉冲动画
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
 } 

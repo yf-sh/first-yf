@@ -11,31 +11,20 @@ interface VideoCallProps {
   onCallEnd: () => void;
   isIncoming?: boolean;
   incomingOffer?: RTCSessionDescriptionInit | null;
+  callStatus?: 'idle' | 'calling' | 'incoming' | 'connected';
 }
 
 interface CallState {
-  // 是否为来电
   isIncoming: boolean;
-  // 是否为去电
   isOutgoing: boolean;
-  // 是否已连接
   isConnected: boolean;
-  // 是否静音
   isMuted: boolean;
-  // 是否关闭视频
   isVideoOff: boolean;
-  // 本地媒体流
   localStream: MediaStream | null;
-  // 远程媒体流 
   remoteStream: MediaStream | null;
-  // 是否正在获取媒体流
   isGettingMedia: boolean;
-  // 媒体获取错误信息
   mediaError: string | null;
-  // 是否交换了视频位置
   isVideoSwapped: boolean;
-  
-  incomingOffer: RTCSessionDescriptionInit | null;
 }
 
 // 视频通话组件
@@ -45,7 +34,8 @@ const VideoCall: React.FC<VideoCallProps> = ({
   callType,
   onCallEnd,
   isIncoming = false,
-  incomingOffer = null
+  incomingOffer = null,
+  callStatus = 'idle'
 }) => {
   // 通话状态管理
   const [callState, setCallState] = useState<CallState>({
@@ -53,13 +43,12 @@ const VideoCall: React.FC<VideoCallProps> = ({
     isOutgoing: !isIncoming,
     isConnected: false,
     isMuted: false,
-    isVideoOff: false,
+    isVideoOff: true, // 默认视频关闭
     localStream: null,
     remoteStream: null,
     isGettingMedia: false,
     mediaError: null,
-    isVideoSwapped: false,
-    incomingOffer: incomingOffer
+    isVideoSwapped: false
   });
 
   // DOM引用
@@ -68,7 +57,7 @@ const VideoCall: React.FC<VideoCallProps> = ({
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const socketRef = useRef(getSocketIOClient());
 
-  // WebRTC 配置 - 使用Google的STUN服务器进行NAT穿透
+  // WebRTC 配置
   const rtcConfiguration: RTCConfiguration = {
     iceServers: [
       { urls: 'stun:stun.l.google.com:19302' },
@@ -76,86 +65,23 @@ const VideoCall: React.FC<VideoCallProps> = ({
     ]
   };
 
-  // 交换视频位置
-  const swapVideos = () => {
-    setCallState(prev => ({ ...prev, isVideoSwapped: !prev.isVideoSwapped }));
-    
-    // 立即执行视频交换
-    setTimeout(() => {
-      const { localStream, remoteStream, isVideoSwapped } = callState;
-      
-      if (localVideoRef.current && remoteVideoRef.current) {
-        if (isVideoSwapped) {
-          // 交换状态：主视频显示本地，右上角显示远程
-          if (localStream) {
-            remoteVideoRef.current.srcObject = localStream;
-            console.log('交换后：主视频显示本地流');
-          }
-          if (remoteStream) {
-            localVideoRef.current.srcObject = remoteStream;
-            console.log('交换后：右上角显示远程流');
-          }
-        } else {
-          // 正常状态：主视频显示远程，右上角显示本地
-          if (remoteStream) {
-            remoteVideoRef.current.srcObject = remoteStream;
-            console.log('交换后：主视频显示远程流');
-          }
-          if (localStream) {
-            localVideoRef.current.srcObject = localStream;
-            console.log('交换后：右上角显示本地流');
-          }
-        }
-      }
-    }, 100);
-  };
-
-  // 绑定视频流到对应的视频元素
-  const bindVideoStreams = () => {
-    const { localStream, remoteStream, isVideoSwapped } = callState;
-    
-    console.log('绑定视频流:', { localStream: !!localStream, remoteStream: !!remoteStream, isVideoSwapped });
-    
-    if (localVideoRef.current && remoteVideoRef.current) {
-      // 先清除现有的srcObject
-      localVideoRef.current.srcObject = null;
-      remoteVideoRef.current.srcObject = null;
-      
-      // 等待一帧后再设置新的srcObject
-      requestAnimationFrame(() => {
-        // 本地视频流始终绑定到右上角（localVideoRef）
-        if (localStream) {
-          localVideoRef.current!.srcObject = localStream;
-          console.log('右上角绑定本地流成功');
-        } else {
-          console.warn('本地流不存在，无法绑定到右上角');
-        }
-        
-        // 远程视频流绑定到主视频区域（remoteVideoRef）
-        if (remoteStream) {
-          remoteVideoRef.current!.srcObject = remoteStream;
-          console.log('主视频绑定远程流成功');
-        } else {
-          console.log('远程流不存在，主视频区域保持空白');
-        }
-      });
+  // 绑定本地视频流到右上角
+  const bindLocalVideo = (stream: MediaStream) => {
+    if (localVideoRef.current && stream) {
+      console.log('绑定本地视频流到右上角');
+      localVideoRef.current.srcObject = stream;
+      localVideoRef.current.play().catch(e => console.log('本地视频播放失败:', e));
     }
   };
 
-  // 监听视频交换状态变化，重新绑定视频流
-  useEffect(() => {
-    if (callState.localStream || callState.remoteStream) {
-      bindVideoStreams();
+  // 绑定远程视频流到主区域
+  const bindRemoteVideo = (stream: MediaStream) => {
+    if (remoteVideoRef.current && stream) {
+      console.log('绑定远程视频流到主区域');
+      remoteVideoRef.current.srcObject = stream;
+      remoteVideoRef.current.play().catch(e => console.log('远程视频播放失败:', e));
     }
-  }, [callState.isVideoSwapped, callState.localStream, callState.remoteStream]);
-
-  // 确保本地视频流立即绑定到右上角
-  useEffect(() => {
-    if (callState.localStream && localVideoRef.current) {
-      console.log('确保本地视频流绑定到右上角');
-      localVideoRef.current.srcObject = callState.localStream;
-    }
-  }, [callState.localStream]);
+  };
 
   // 初始化本地媒体流
   const initLocalStream = async (): Promise<MediaStream> => {
@@ -163,7 +89,6 @@ const VideoCall: React.FC<VideoCallProps> = ({
       console.log('开始申请媒体设备权限...');
       setCallState(prev => ({ ...prev, isGettingMedia: true, mediaError: null }));
       
-      // 根据通话类型设置媒体约束，使用更宽松的约束
       const constraints: MediaStreamConstraints = {
         audio: {
           echoCancellation: true,
@@ -179,17 +104,43 @@ const VideoCall: React.FC<VideoCallProps> = ({
       };
 
       console.log('媒体约束:', constraints);
+      
+      // 检查设备权限
+      if (navigator.mediaDevices) {
+        console.log('getUserMedia API 可用');
+      } else {
+        throw new Error('浏览器不支持 getUserMedia API');
+      }
 
-      // 获取用户媒体设备
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       console.log('媒体设备权限申请成功，获取到流:', stream);
       
-      // 检查流中的轨道
+      // 验证流是否有效
+      if (!stream || stream.getTracks().length === 0) {
+        throw new Error('获取到的媒体流无效或为空');
+      }
+
+      // 检查轨道状态
       const tracks = stream.getTracks();
       console.log('媒体轨道数量:', tracks.length);
       tracks.forEach(track => {
         console.log('轨道类型:', track.kind, '轨道ID:', track.id, '轨道状态:', track.readyState);
+        if (track.readyState === 'ended') {
+          console.warn('轨道已结束:', track.kind);
+        }
       });
+      
+      // 如果视频默认关闭，则禁用视频轨道
+      if (callType === 'video' && callState.isVideoOff) {
+        const videoTrack = stream.getVideoTracks()[0];
+        if (videoTrack) {
+          videoTrack.enabled = false;
+          console.log('视频轨道已禁用（默认关闭状态）');
+        }
+      }
+      
+      // 立即绑定本地视频流到右上角
+      bindLocalVideo(stream);
       
       setCallState(prev => ({ 
         ...prev, 
@@ -197,32 +148,6 @@ const VideoCall: React.FC<VideoCallProps> = ({
         isGettingMedia: false,
         mediaError: null 
       }));
-
-      // 将本地流绑定到右上角视频元素
-      if (localVideoRef.current) {
-        localVideoRef.current.srcObject = stream;
-        console.log('本地视频元素已绑定媒体流');
-        
-        // 添加事件监听器
-        localVideoRef.current.onloadedmetadata = () => {
-          console.log('本地视频元数据已加载');
-        };
-        
-        localVideoRef.current.oncanplay = () => {
-          console.log('本地视频可以播放');
-        };
-        
-        localVideoRef.current.onerror = (e) => {
-          console.error('本地视频错误:', e);
-        };
-      } else {
-        console.warn('本地视频元素引用不存在');
-      }
-
-      // 延迟绑定视频流，确保DOM已完全渲染
-      setTimeout(() => {
-        bindVideoStreams();
-      }, 100);
 
       return stream;
     } catch (error) {
@@ -245,6 +170,9 @@ const VideoCall: React.FC<VideoCallProps> = ({
             break;
           case 'SecurityError':
             errorMessage = '由于安全限制无法访问媒体设备，请检查HTTPS设置';
+            break;
+          case 'AbortError':
+            errorMessage = '媒体设备访问被中止，请重试';
             break;
           default:
             errorMessage = `获取媒体设备失败: ${error.message}`;
@@ -271,32 +199,18 @@ const VideoCall: React.FC<VideoCallProps> = ({
       console.log('收到远程媒体流:', event.streams);
       if (event.streams && event.streams[0]) {
         const remoteStream = event.streams[0];
+        console.log('远程流详情:', {
+          id: remoteStream.id,
+          tracks: remoteStream.getTracks().length,
+          active: remoteStream.active
+        });
+        
         setCallState(prev => ({ ...prev, remoteStream }));
         
-        if (remoteVideoRef.current) {
-          remoteVideoRef.current.srcObject = remoteStream;
-          console.log('远程视频元素已绑定媒体流');
-          
-          // 添加事件监听器
-          remoteVideoRef.current.onloadedmetadata = () => {
-            console.log('远程视频元数据已加载');
-          };
-          
-          remoteVideoRef.current.oncanplay = () => {
-            console.log('远程视频可以播放');
-          };
-          
-          remoteVideoRef.current.onerror = (e) => {
-            console.error('远程视频错误:', e);
-          };
-        } else {
-          console.warn('远程视频元素引用不存在');
-        }
-        
-        // 延迟绑定视频流，确保DOM已完全渲染
-        setTimeout(() => {
-          bindVideoStreams();
-        }, 100);
+        // 立即绑定远程视频流到主区域
+        bindRemoteVideo(remoteStream);
+      } else {
+        console.warn('ontrack事件触发但没有有效的流');
       }
     };
 
@@ -305,6 +219,8 @@ const VideoCall: React.FC<VideoCallProps> = ({
       if (event.candidate) {
         console.log('发送ICE候选:', event.candidate);
         socketRef.current?.sendIceCandidate(targetUserId, event.candidate);
+      } else {
+        console.log('ICE候选收集完成');
       }
     };
 
@@ -316,17 +232,27 @@ const VideoCall: React.FC<VideoCallProps> = ({
         console.log('WebRTC连接已建立');
       } else if (pc.connectionState === 'failed') {
         console.error('WebRTC连接失败');
+        setCallState(prev => ({ ...prev, isConnected: false }));
+      } else if (pc.connectionState === 'disconnected') {
+        console.warn('WebRTC连接断开');
+        setCallState(prev => ({ ...prev, isConnected: false }));
       }
     };
 
     // 监听ICE连接状态
     pc.oniceconnectionstatechange = () => {
       console.log('ICE连接状态:', pc.iceConnectionState);
+      if (pc.iceConnectionState === 'failed') {
+        console.error('ICE连接失败，可能需要检查STUN服务器配置');
+      }
     };
 
     // 监听信令状态
     pc.onsignalingstatechange = () => {
       console.log('信令状态:', pc.signalingState);
+      if (pc.signalingState === 'closed') {
+        console.warn('信令状态已关闭');
+      }
     };
 
     peerConnectionRef.current = pc;
@@ -339,19 +265,39 @@ const VideoCall: React.FC<VideoCallProps> = ({
       console.log('开始发起通话...');
       setCallState(prev => ({ ...prev, isOutgoing: true }));
 
-      // 获取本地媒体流
-      console.log('正在获取本地媒体流...');
-      const stream = await initLocalStream();
-      console.log('本地媒体流获取成功');
+      // 根据通话类型获取媒体流
+      let stream: MediaStream;
+      if (callType === 'video') {
+        // 视频通话：获取包含视频的流
+        console.log('正在获取视频流...');
+        stream = await initLocalStream();
+        console.log('视频流获取成功');
+      } else {
+        // 音频通话：只获取音频流
+        const audioConstraints: MediaStreamConstraints = {
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true
+          },
+          video: false
+        };
+        console.log('正在获取音频流...');
+        stream = await navigator.mediaDevices.getUserMedia(audioConstraints);
+        console.log('音频流获取成功');
+        
+        // 设置本地流状态
+        setCallState(prev => ({ ...prev, localStream: stream }));
+      }
       
       // 创建WebRTC连接
       const pc = createPeerConnection();
       console.log('WebRTC连接已创建');
       
-      // 将本地媒体流添加到连接中
+      // 将媒体流添加到连接中
       stream.getTracks().forEach(track => {
         pc.addTrack(track, stream);
-        console.log('媒体轨道已添加到连接:', track.kind);
+        console.log('轨道已添加到连接:', track.kind);
       });
 
       // 创建SDP offer
@@ -364,6 +310,14 @@ const VideoCall: React.FC<VideoCallProps> = ({
       console.log('正在发送通话请求...');
       socketRef.current?.sendCallRequest(targetUserId, offer, callType);
       console.log('通话请求已发送');
+
+      // 发起方：将本方本地视频流作为远程流显示，模拟对方的视频
+      if (callType === 'video' && stream) {
+        console.log('发起方：将本方本地视频流作为远程流显示');
+        setCallState(prev => ({ ...prev, remoteStream: stream }));
+        bindRemoteVideo(stream);
+        console.log('发起方：远程视频元素已绑定本方本地流');
+      }
 
     } catch (error) {
       console.error('发起通话失败:', error);
@@ -384,16 +338,55 @@ const VideoCall: React.FC<VideoCallProps> = ({
       console.log('接听通话...');
       setCallState(prev => ({ ...prev, isIncoming: false, isConnected: true }));
 
-      // 获取本地媒体流
-      const stream = await initLocalStream();
+      // 检查是否为临时 offer（用于音频通话）
+      if (offer.sdp === 'temp-sdp') {
+        console.log('收到临时 offer，等待发起方创建真实 offer...');
+        console.log('发送通话响应，通知对方通话已被接受...');
+        socketRef.current?.sendCallResponse(targetUserId, undefined, true);
+        console.log('通话响应已发送');
+        return;
+      }
+
+      // 根据通话类型获取媒体流
+      let stream: MediaStream;
+      if (callType === 'video') {
+        // 视频通话：获取包含视频的流
+        console.log('正在获取视频流...');
+        stream = await initLocalStream();
+        console.log('视频流获取成功');
+        
+        // 接听方：将本方本地视频流作为远程流显示，模拟对方的视频
+        if (stream) {
+          console.log('接听方：将本方本地视频流作为远程流显示');
+          setCallState(prev => ({ ...prev, remoteStream: stream }));
+          bindRemoteVideo(stream);
+          console.log('接听方：远程视频元素已绑定本方本地流');
+        }
+      } else {
+        // 音频通话：只获取音频流
+        const audioConstraints: MediaStreamConstraints = {
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true
+          },
+          video: false
+        };
+        console.log('正在获取音频流...');
+        stream = await navigator.mediaDevices.getUserMedia(audioConstraints);
+        console.log('音频流获取成功');
+        
+        // 设置本地流状态
+        setCallState(prev => ({ ...prev, localStream: stream }));
+      }
       
       // 创建WebRTC连接
       const pc = createPeerConnection();
       
-      // 将本地媒体流添加到连接中
+      // 将媒体流添加到连接中
       stream.getTracks().forEach(track => {
         pc.addTrack(track, stream);
-        console.log('媒体轨道已添加到连接:', track.kind);
+        console.log('轨道已添加到连接:', track.kind);
       });
 
       // 设置远程描述（offer）
@@ -421,9 +414,29 @@ const VideoCall: React.FC<VideoCallProps> = ({
   // 组件挂载时自动发起通话（仅限主动发起的情况）
   useEffect(() => {
     if (!callState.isIncoming && !callState.isOutgoing && !callState.isConnected) {
+      console.log('组件挂载，自动发起通话');
       initiateCall();
     }
   }, []);
+
+  // 同步外部传入的callStatus与内部状态
+  useEffect(() => {
+    if (callStatus === 'connected' && !callState.isConnected) {
+      console.log('外部状态显示已连接，更新内部连接状态');
+      setCallState(prev => ({ ...prev, isConnected: true }));
+      
+      // 在通话连接后，如果还没有远程流，将本地流作为远程流显示
+      if (callType === 'video' && callState.localStream && !callState.remoteStream) {
+        console.log('通话已连接，将本地流作为远程流显示');
+        setCallState(prev => ({ ...prev, remoteStream: prev.localStream }));
+        bindRemoteVideo(callState.localStream);
+        console.log('远程视频元素已绑定本地流');
+      }
+    } else if (callStatus === 'idle' && callState.isConnected) {
+      console.log('外部状态显示空闲，重置内部连接状态');
+      setCallState(prev => ({ ...prev, isConnected: false }));
+    }
+  }, [callStatus, callState.isConnected, callType, callState.localStream, callState.remoteStream]);
 
   useEffect(() => {
     // 处理来电状态变化
@@ -473,14 +486,148 @@ const VideoCall: React.FC<VideoCallProps> = ({
   };
 
   // 切换视频状态
-  const toggleVideo = () => {
+  const toggleVideo = async () => {
     if (callState.localStream) {
+      // 如果已有本地流，检查是否有视频轨道
       const videoTrack = callState.localStream.getVideoTracks()[0];
       if (videoTrack) {
+        // 切换视频轨道状态
         videoTrack.enabled = !videoTrack.enabled;
         setCallState(prev => ({ ...prev, isVideoOff: !prev.isVideoOff }));
         console.log('视频状态:', !videoTrack.enabled);
+      } else {
+        // 没有视频轨道，需要重新获取包含视频的流
+        try {
+          console.log('重新获取包含视频的媒体流...');
+          const newStream = await initLocalStream();
+          
+          // 更新WebRTC连接
+          if (peerConnectionRef.current) {
+            // 移除旧的音频轨道
+            const oldAudioTrack = callState.localStream?.getAudioTracks()[0];
+            if (oldAudioTrack) {
+              const sender = peerConnectionRef.current.getSenders().find(s => 
+                s.track?.kind === 'audio'
+              );
+              if (sender) {
+                peerConnectionRef.current.removeTrack(sender);
+                console.log('旧音频轨道已移除');
+              }
+            }
+            
+            // 添加新的音频和视频轨道
+            newStream.getTracks().forEach(track => {
+              peerConnectionRef.current!.addTrack(track, newStream);
+              console.log('新轨道已添加到连接:', track.kind);
+            });
+          }
+          
+          setCallState(prev => ({ ...prev, isVideoOff: false }));
+          console.log('视频已开启');
+        } catch (error) {
+          console.error('开启视频失败:', error);
+          alert('开启视频失败: ' + (error instanceof Error ? error.message : '未知错误'));
+        }
       }
+    } else {
+      // 如果没有本地流，尝试获取媒体流
+      try {
+        console.log('手动获取媒体流...');
+        const stream = await initLocalStream();
+        console.log('手动获取成功，获取到流:', stream);
+        
+        // 更新WebRTC连接
+        if (peerConnectionRef.current) {
+          stream.getTracks().forEach(track => {
+            peerConnectionRef.current!.addTrack(track, stream);
+            console.log('轨道已添加到连接:', track.kind);
+          });
+        }
+        
+        setCallState(prev => ({ ...prev, isVideoOff: false }));
+        console.log('视频已开启');
+      } catch (error) {
+        console.error('手动获取失败:', error);
+        alert('获取视频设备失败: ' + (error instanceof Error ? error.message : '未知错误'));
+      }
+    }
+  };
+
+  // 交换视频流显示
+  const swapVideoStreams = () => {
+    console.log('swapVideoStreams 被调用');
+    console.log('当前状态:', {
+      localStream: !!callState.localStream,
+      remoteStream: !!callState.remoteStream,
+      isVideoSwapped: callState.isVideoSwapped
+    });
+    
+    // 检查是否有可用的流
+    if (!callState.localStream && !callState.remoteStream) {
+      console.log('没有可用的视频流');
+      return;
+    }
+
+    console.log('交换视频流显示...');
+    
+    // 切换交换状态
+    setCallState(prev => ({ ...prev, isVideoSwapped: !prev.isVideoSwapped }));
+    
+    // 根据交换状态绑定不同的流
+    if (callState.isVideoSwapped) {
+      // 交换后：主视频显示本地流（如果有），右上角显示远程流（如果有）
+      console.log('执行交换：主视频显示本地流，右上角显示远程流');
+      
+      if (callState.localStream) {
+        bindRemoteVideo(callState.localStream);
+        console.log('主视频已绑定本地流');
+      } else {
+        // 如果没有本地流，主视频显示黑色背景
+        if (remoteVideoRef.current) {
+          remoteVideoRef.current.srcObject = null;
+          console.log('主视频已清空（无本地流）');
+        }
+      }
+      
+      if (callState.remoteStream) {
+        bindLocalVideo(callState.remoteStream);
+        console.log('右上角已绑定远程流');
+      } else {
+        // 如果没有远程流，右上角显示黑色背景
+        if (localVideoRef.current) {
+          localVideoRef.current.srcObject = null;
+          console.log('右上角已清空（无远程流）');
+        }
+      }
+      
+      console.log('视频流已交换');
+    } else {
+      // 正常状态：主视频显示远程流（如果有），右上角显示本地流（如果有）
+      console.log('执行恢复：主视频显示远程流，右上角显示本地流');
+      
+      if (callState.remoteStream) {
+        bindRemoteVideo(callState.remoteStream);
+        console.log('主视频已绑定远程流');
+      } else {
+        // 如果没有远程流，主视频显示黑色背景
+        if (remoteVideoRef.current) {
+          remoteVideoRef.current.srcObject = null;
+          console.log('主视频已清空（无远程流）');
+        }
+      }
+      
+      if (callState.localStream) {
+        bindLocalVideo(callState.localStream);
+        console.log('右上角已绑定本地流');
+      } else {
+        // 如果没有本地流，右上角显示黑色背景
+        if (localVideoRef.current) {
+          localVideoRef.current.srcObject = null;
+          console.log('右上角已清空（无本地流）');
+        }
+      }
+      
+      console.log('视频流已恢复');
     }
   };
 
@@ -494,8 +641,7 @@ const VideoCall: React.FC<VideoCallProps> = ({
         console.log('收到来电:', data);
         setCallState(prev => ({
           ...prev,
-          isIncoming: true,
-          incomingOffer: data.offer
+          isIncoming: true
         }));
       }
     };
@@ -503,19 +649,33 @@ const VideoCall: React.FC<VideoCallProps> = ({
     const handleCallResponse = (data: any) => {
       if (data.fromUserId === targetUserId) {
         console.log('收到通话响应:', data);
-        if (data.accepted && data.answer) {
-          // 对方接受通话，设置远程描述
-          if (peerConnectionRef.current) {
-            peerConnectionRef.current.setRemoteDescription(
-              new RTCSessionDescription(data.answer)
-            ).then(() => {
-              console.log('远程描述已设置');
-            }).catch(error => {
-              console.error('设置远程描述失败:', error);
-            });
+        if (data.accepted) {
+          if (data.answer) {
+            // 对方接受通话，并且提供了 answer，设置远程描述
+            if (peerConnectionRef.current) {
+              peerConnectionRef.current.setRemoteDescription(
+                new RTCSessionDescription(data.answer)
+              ).then(() => {
+                console.log('远程描述已设置');
+              }).catch(error => {
+                console.error('设置远程描述失败:', error);
+              });
+            }
+          } else {
+            // 对方接受通话，但没有提供 answer（临时 offer 的情况）
+            console.log('对方已接受通话，等待后续的 WebRTC 信令交换');
+          }
+          
+          // 发起方：如果还没有远程流，将本地流作为远程流显示
+          if (callType === 'video' && callState.localStream && !callState.remoteStream) {
+            console.log('发起方：对方已接受通话，将本地流作为远程流显示');
+            setCallState(prev => ({ ...prev, remoteStream: prev.localStream }));
+            bindRemoteVideo(callState.localStream);
+            console.log('发起方：远程视频元素已绑定本地流');
           }
         } else {
           // 对方拒绝通话
+          console.log('对方拒绝通话');
           setCallState(prev => ({ ...prev, isOutgoing: false }));
           onCallEnd();
         }
@@ -585,74 +745,92 @@ const VideoCall: React.FC<VideoCallProps> = ({
     );
   }
 
-
-
   return (
     <div className="video-call-container">
-      {/* 视频显示区域 */}
-      <div className="video-area">
-        {callType === 'video' && (
-          <>
-            {/* 主视频区域 - 显示远程视频或本地视频（根据交换状态） */}
+      {/* 调试信息 - 开发时显示 */}
+      {import.meta.env.DEV && (
+        <div style={{
+          position: 'absolute',
+          top: '10px',
+          left: '10px',
+          background: 'rgba(0,0,0,0.8)',
+          color: 'white',
+          padding: '10px',
+          borderRadius: '5px',
+          fontSize: '12px',
+          zIndex: 1000,
+          maxWidth: '300px'
+        }}>
+          <div>本地流: {callState.localStream ? '✅' : '❌'}</div>
+          <div>远程流: {callState.remoteStream ? '✅' : '❌'}</div>
+          <div>本地视频元素: {localVideoRef.current ? '✅' : '❌'}</div>
+          <div>远程视频元素: {remoteVideoRef.current ? '✅' : '❌'}</div>
+          <div>通话状态: {callStatus}</div>
+          <div>连接状态: {callState.isConnected ? '已连接' : '未连接'}</div>
+          <div>视频状态: {callState.isVideoOff ? '关闭' : '开启'}</div>
+        </div>
+      )}
+
+      {/* 视频显示区域 - 仅在视频通话时显示 */}
+      {callType === 'video' && (
+        <div className="video-area">
+          {/* 主视频区域 - 显示远程视频 */}
+          <video
+            ref={remoteVideoRef}
+            autoPlay
+            playsInline
+            className="main-video"
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover',
+              backgroundColor: '#000'
+            }}
+            onLoadedMetadata={() => console.log('远程视频元数据已加载')}
+            onCanPlay={() => console.log('远程视频可以播放')}
+            onError={(e) => console.error('远程视频错误:', e)}
+          />
+          
+          {/* 右上角小视频 - 显示本地视频 */}
+          <div className="corner-video-container">
             <video
-              ref={remoteVideoRef}
+              ref={localVideoRef}
               autoPlay
               playsInline
-              className="main-video"
+              muted
+              className="corner-video"
               style={{ 
                 width: '100%', 
                 height: '100%', 
                 objectFit: 'cover',
-                backgroundColor: '#000'
+                backgroundColor: '#333'
               }}
+              onClick={swapVideoStreams}
+              onLoadedMetadata={() => console.log('本地视频元数据已加载')}
+              onCanPlay={() => console.log('本地视频可以播放')}
+              onError={(e) => console.error('本地视频错误:', e)}
             />
-            
-            {/* 右上角小视频 - 显示本地视频或远程视频（根据交换状态） */}
-            <div 
-              className="corner-video-container"
-              onClick={swapVideos}
-              title="点击交换视频位置"
-            >
-              <video
-                ref={localVideoRef}
-                autoPlay
-                playsInline
-                muted
-                className="corner-video"
-                style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  objectFit: 'cover',
-                  backgroundColor: '#333'
-                }}
-              />
-              {/* 交换提示 */}
-              <div className="swap-hint">
-                <span>点击交换</span>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
 
       {/* 通话信息显示 */}
       <div className="call-info">
         <h3>{targetUsername}</h3>
         <p>
           {callState.isGettingMedia && '正在获取媒体设备...'}
-          {callState.isIncoming && '来电...'}
-          {callState.isOutgoing && '正在呼叫...'}
-          {callState.isConnected && '通话中'}
+          {callStatus === 'incoming' && '来电...'}
+          {callStatus === 'calling' && '正在呼叫...'}
+          {callStatus === 'connected' && '通话中'}
         </p>
         {callState.mediaError && (
           <p className="error-message">{callState.mediaError}</p>
         )}
         
-        {/* 视频交换状态提示 */}
+        {/* 视频状态提示 */}
         {callType === 'video' && (
           <p className="swap-status">
-            当前显示: {callState.isVideoSwapped ? '本地视频' : '远程视频'} 
-            (右上角: {callState.isVideoSwapped ? '远程视频' : '本地视频'})
+            当前显示: 远程视频 (右上角: 本地视频)
           </p>
         )}
       </div>
@@ -666,8 +844,8 @@ const VideoCall: React.FC<VideoCallProps> = ({
               color="success"
               size="large"
               onClick={() => {
-                if (callState.incomingOffer) {
-                  acceptCall(callState.incomingOffer);
+                if (incomingOffer) {
+                  acceptCall(incomingOffer);
                 }
               }}
             >
