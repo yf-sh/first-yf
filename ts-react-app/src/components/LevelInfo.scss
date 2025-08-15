@@ -1,0 +1,121 @@
+.level-info-container {
+  padding: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  color: white;
+  margin: 16px 0;
+
+  .loading {
+    text-align: center;
+    padding: 20px;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .level-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .level-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      .level-text {
+        font-size: 24px;
+        font-weight: bold;
+        color: #ffd700;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .level-name {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.9);
+        margin-top: 2px;
+      }
+    }
+
+    .exp-info {
+      text-align: right;
+      font-size: 14px;
+
+      .current-exp {
+        font-weight: bold;
+        color: #ffd700;
+      }
+
+      .separator {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .next-exp {
+        color: rgba(255, 255, 255, 0.8);
+      }
+    }
+  }
+
+  .progress-section {
+    margin-bottom: 20px;
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 8px;
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #ff6b6b 0%, #4ecdc4 100%);
+        border-radius: 10px;
+        transition: width 0.3s ease;
+      }
+    }
+
+    .progress-text {
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 480px) {
+  .level-info-container {
+    padding: 12px;
+    margin: 12px 0;
+
+    .level-header {
+      .level-badge {
+        .level-text {
+          font-size: 20px;
+        }
+      }
+
+      .exp-info {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+// 动画效果
+@keyframes levelUp {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.level-info-container.level-up {
+  animation: levelUp 0.8s ease-in-out;
+}

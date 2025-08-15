@@ -1,0 +1,388 @@
+.loginContainer {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.loginContainer .loginleft {
+  display: none; /* 小程序风格通常不需要左侧装饰 */
+}
+
+.loginContainer .loginright {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.formContainer {
+  width: 100%;
+  padding: 40px 30px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.formContainer:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.formTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+  letter-spacing: -0.5px;
+}
+
+.formTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.inputBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(247, 248, 252, 0.8);
+  border: 1px solid rgba(230, 235, 245, 0.8);
+  border-radius: 12px;
+  padding: 16px 18px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.inputBox:focus-within {
+  border-color: #667eea;
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+}
+
+.inputIcon {
+  font-size: 1.1rem;
+  margin-right: 12px;
+  color: #8b93a6;
+  transition: color 0.3s ease;
+}
+
+.inputBox:focus-within .inputIcon {
+  color: #667eea;
+}
+
+.input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  padding: 0;
+  outline: none;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.input::placeholder {
+  color: #a0a8ba;
+  font-weight: 400;
+}
+
+.eyeIcon {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #8b93a6;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.eyeIcon:hover {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  margin: 0.5rem 0 1.5rem 0;
+}
+
+.rememberMe {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #5a6c7d;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.rememberMe:hover {
+  color: #667eea;
+}
+
+.rememberMe input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #667eea;
+  border-radius: 4px;
+}
+
+.forgotPassword {
+  color: #5a6c7d;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 4px 0;
+}
+
+.forgotPassword:hover {
+  color: #667eea;
+}
+
+.loginButton {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 24px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+}
+
+.loginButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.loginButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+}
+
+.loginButton:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.loginButton:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.loginButton:disabled {
+  background: linear-gradient(135deg, #bdc3c7 0%, #95a5a6 100%);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.eyeIcon:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.registerLink {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(230, 235, 245, 0.6);
+}
+
+.registerLink a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.registerLink a:hover {
+  color: #5a6fd8;
+}
+
+.toggleLink {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.toggleLink:hover {
+  color: #5a6fd8;
+}
+
+.codeBtn {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: #fff;
+  border: none;
+  border-radius: 0 12px 12px 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: -1px;
+  min-width: 100px;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.codeBtn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2980b9 0%, #21618c 100%);
+  transform: translateX(1px);
+}
+
+.codeBtn:disabled {
+  background: linear-gradient(135deg, #bdc3c7 0%, #95a5a6 100%);
+  color: #7f8c8d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* 邮箱验证码输入框特殊样式 */
+.inputBox input[placeholder="邮箱验证码"] {
+  background: transparent !important;
+  border-radius: 12px 0 0 12px !important;
+  font-size: 1rem;
+  color: #2c3e50 !important;
+  font-weight: 500;
+}
+
+/* 验证码输入框容器的特殊样式 */
+.inputBox[style*="padding: 0"] {
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+
+.inputBox[style*="padding: 0"] .input {
+  background: rgba(247, 248, 252, 0.8) !important;
+  border: 1px solid rgba(230, 235, 245, 0.8) !important;
+  border-radius: 12px 0 0 12px !important;
+  padding: 16px 18px !important;
+  transition: all 0.3s ease;
+}
+
+.inputBox[style*="padding: 0"] .input:focus {
+  border-color: #667eea !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15) !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .loginContainer {
+    padding: 15px;
+  }
+  
+  .loginContainer .loginright {
+    max-width: 100%;
+  }
+  
+  .formContainer {
+    padding: 30px 25px;
+    border-radius: 16px;
+  }
+  
+  .formTitle {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form {
+    gap: 1rem;
+  }
+  
+  .inputBox {
+    padding: 14px 16px;
+  }
+  
+  .loginButton {
+    padding: 14px 20px;
+    font-size: 1rem;
+  }
+  
+  .codeBtn {
+    padding: 14px 16px;
+    font-size: 0.85rem;
+    min-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loginContainer {
+    padding: 10px;
+  }
+  
+  .formContainer {
+    padding: 25px 20px;
+    border-radius: 12px;
+  }
+  
+  .formTitle {
+    font-size: 1.4rem;
+  }
+  
+  .inputBox {
+    padding: 12px 14px;
+  }
+  
+  .input {
+    font-size: 0.95rem;
+  }
+  
+  .codeBtn {
+    min-width: 70px;
+    font-size: 0.8rem;
+  }
+}

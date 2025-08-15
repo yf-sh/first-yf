@@ -1,0 +1,134 @@
+.edit-profile-container {
+  height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+
+  .edit-profile-navbar {
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .edit-profile-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+
+    .avatar-section {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 20px;
+      text-align: center;
+
+      .avatar-wrapper {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 10px;
+        cursor: pointer;
+
+        .edit-avatar {
+          transition: opacity 0.3s;
+        }
+
+        .avatar-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: rgba(0, 0, 0, 0.5);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: opacity 0.3s;
+          color: #fff;
+        }
+
+        &:hover {
+          .edit-avatar {
+            opacity: 0.8;
+          }
+
+          .avatar-overlay {
+            opacity: 1;
+          }
+        }
+      }
+
+      .avatar-text {
+        color: #999;
+        font-size: 14px;
+      }
+    }
+
+    .edit-form {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 20px;
+
+      .adm-form-item {
+        margin-bottom: 20px;
+
+        .adm-form-item-label {
+          font-weight: 500;
+          color: #333;
+          margin-bottom: 8px;
+        }
+
+        .adm-input {
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          padding: 12px;
+          font-size: 16px;
+
+          &:focus {
+            border-color: #1976d2;
+          }
+        }
+
+        .adm-text-area {
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          padding: 12px;
+          font-size: 16px;
+          resize: none;
+
+          &:focus {
+            border-color: #1976d2;
+          }
+        }
+      }
+
+      .form-buttons {
+        margin-top: 30px;
+
+        .adm-button {
+          border-radius: 25px;
+          height: 50px;
+          font-size: 16px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .edit-profile-container {
+    .edit-profile-content {
+      padding: 15px;
+
+      .avatar-section {
+        padding: 20px;
+      }
+
+      .edit-form {
+        padding: 15px;
+      }
+    }
+  }
+}

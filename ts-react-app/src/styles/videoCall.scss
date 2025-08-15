@@ -1,0 +1,351 @@
+.video-call-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .video-area {
+    position: relative;
+    width: 100%;
+    height: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+    border-radius: 12px;
+    overflow: hidden;
+
+    .main-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      background-color: #000;
+      
+      // 确保视频元素可见
+      display: block;
+      min-width: 100%;
+      min-height: 100%;
+    }
+
+    .corner-video-container {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 120px;
+      height: 90px;
+      border-radius: 8px;
+      border: 3px solid #fff;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+      background-color: #333;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      overflow: hidden;
+
+      &:hover {
+        transform: scale(1.05);
+        border-color: #4CAF50;
+        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      .corner-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        background-color: #333;
+        display: block;
+        min-width: 120px;
+        min-height: 90px;
+      }
+
+      .swap-hint {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        font-size: 10px;
+        text-align: center;
+        padding: 2px 4px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+
+      &:hover .swap-hint {
+        opacity: 1;
+      }
+    }
+  }
+
+  .call-info {
+    text-align: center;
+    margin: 20px 0;
+    color: white;
+
+    h3 {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    p {
+      font-size: 16px;
+      margin: 0;
+      opacity: 0.9;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      
+      &.error-message {
+        color: #ff6b6b;
+        font-weight: 500;
+        margin-top: 8px;
+        padding: 8px 16px;
+        background-color: rgba(255, 107, 107, 0.1);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 107, 107, 0.3);
+      }
+
+      &.swap-status {
+        font-size: 14px;
+        color: #4CAF50;
+        margin-top: 8px;
+        padding: 6px 12px;
+        background-color: rgba(76, 175, 80, 0.1);
+        border-radius: 6px;
+        border: 1px solid rgba(76, 175, 80, 0.3);
+        font-weight: 500;
+      }
+    }
+  }
+
+  .call-controls {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+
+    .adm-button {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      &.adm-button-fill-success {
+        background: linear-gradient(135deg, #4CAF50, #45a049);
+        color: white;
+      }
+
+      &.adm-button-fill-danger {
+        background: linear-gradient(135deg, #f44336, #d32f2f);
+        color: white;
+      }
+
+      &.adm-button-default {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.3);
+        }
+      }
+    }
+  }
+
+  // 媒体错误显示
+  .media-error {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    color: white;
+    max-width: 400px;
+    margin: 0 auto;
+
+    h3 {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 0 0 20px 0;
+      color: #ff6b6b;
+    }
+
+    p {
+      font-size: 16px;
+      margin: 0 0 30px 0;
+      line-height: 1.5;
+      opacity: 0.9;
+    }
+
+    .adm-button {
+      min-width: 120px;
+      height: 48px;
+      border-radius: 24px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+
+  // 加载状态
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 18px;
+      margin: 0;
+      opacity: 0.9;
+    }
+  }
+}
+
+// 音频通话样式（无视频时）
+.audio-call {
+  .video-area {
+    display: none;
+  }
+
+  .call-info {
+    margin: 40px 0;
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .video-call-container {
+    .video-area {
+      height: 60%;
+
+      .corner-video-container {
+        width: 100px;
+        height: 75px;
+        top: 10px;
+        right: 10px;
+      }
+    }
+
+    .call-controls {
+      gap: 15px;
+
+      .adm-button {
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    .media-error {
+      padding: 30px 20px;
+      margin: 0 20px;
+    }
+  }
+}
+
+// 通话状态动画
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.calling {
+  animation: pulse 2s infinite;
+}
+
+// 加载状态
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: white;
+  font-size: 18px;
+
+  &::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// 视频元素调试样式（开发时使用）
+.video-debug {
+  .main-video,
+  .corner-video {
+    border: 2px solid red !important;
+    
+    &::before {
+      content: attr(src) " - " attr(width) "x" attr(height);
+      position: absolute;
+      top: -20px;
+      left: 0;
+      background: red;
+      color: white;
+      font-size: 10px;
+      padding: 2px 4px;
+      border-radius: 2px;
+    }
+  }
+} 

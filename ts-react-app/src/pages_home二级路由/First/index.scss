@@ -1,0 +1,508 @@
+
+// 全局样式
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.create-page {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 80px; // 为底部导航留出空间
+
+  // 分割线样式
+  .divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #e0e0e0, transparent);
+    margin: 0;
+    opacity: 0.6;
+  }
+
+  // 顶部选项卡容器
+  .tabs-container {
+    background-color: #fff;
+    
+    .adm-tabs-header {
+      background-color: #fff;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .adm-tabs-tab {
+      color: #666;
+      font-size: 14px;
+      font-weight: 500;
+      
+      &.adm-tabs-tab-active {
+        color: #ff6b9d;
+        
+        .adm-tabs-tab-line {
+          background-color: #ff6b9d;
+        }
+      }
+    }
+  }
+
+  // 最常访问区域
+  .recent-visited-section {
+    background-color: #fff;
+    padding: 16px 12px;
+    position: relative;
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      
+      .section-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+      }
+      
+      .more-btn {
+        font-size: 14px;
+        color: #999;
+        cursor: pointer;
+        
+        &:hover {
+          color: #ff6b9d;
+        }
+      }
+    }
+    
+    .visited-list {
+      display: flex;
+      justify-content: flex-start;
+      gap: 20px;
+      padding: 0 16px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 8px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch; // iOS滑动优化
+      
+      // 隐藏滚动条但保持滚动功能
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      
+      .visited-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 60px;
+        flex-shrink: 0; // 防止压缩
+        cursor: pointer;
+        
+        .visited-avatar {
+          margin-bottom: 8px;
+          
+          .visited-avatar-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+          }
+        }
+        
+        .visited-name {
+          font-size: 12px;
+          color: #666;
+          text-align: center;
+          line-height: 1.2;
+        }
+        
+        &:hover {
+          .visited-name {
+            color: #ff6b9d;
+          }
+        }
+      }
+    }
+    
+    // 右边渐变遮罩，提示可以滑动
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50px; // 调整位置到头像区域
+      right: 0;
+      width: 20px;
+      height: 80px;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8));
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    // 当内容可滚动时显示渐变提示
+    &.scrollable::after {
+      opacity: 1;
+    }
+  }
+
+  // 提示信息区域
+  .notice-section {
+    background-color: #fff;
+    padding: 40px 12px;
+    text-align: center;
+
+    .notice-title {
+      font-size: 16px;
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 8px;
+
+    }
+
+    .notice-desc {
+      font-size: 14px;
+      color: #999;
+    }
+  }
+
+  // 推荐区域
+  .recommend-section {
+    margin: 0;
+    padding: 0;
+    
+    .section-title {
+      background-color: #fff;
+      padding: 16px 12px 16px 9px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    // UP主卡片
+    .up-card {
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+      border-top: none !important;
+      margin: 0 !important;
+
+      .adm-card-body {
+        padding: 16px 4px;
+        border-top: none !important;
+        margin: 0 !important;
+      }
+      
+      // 确保卡片完全紧贴
+      &:not(:first-child) {
+        margin-top: 0 !important;
+      }
+      
+      &:not(:last-child) {
+        margin-bottom: 0 !important;
+      }
+
+      // UP主头部信息
+      .up-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+
+        .up-info {
+          display: flex;
+          align-items: center;
+          flex: 1;
+
+          .up-avatar {
+            width: 48px;
+            height: 48px;
+            margin-right: 12px;
+            border-radius: 50%;
+          }
+
+          .up-details {
+            flex: 1;
+
+            .up-name {
+              font-size: 16px;
+              font-weight: 500;
+              color: #333;
+              margin-bottom: 4px;
+            }
+
+            .up-desc {
+              font-size: 13px;
+              color: #999;
+            }
+          }
+        }
+
+        .follow-btn {
+          font-size: 14px;
+          padding: 4px 12px;
+          border-radius: 2px;
+          min-width: 60px;
+          border: 1px solid #ff6b9d;
+          color: #ff6b9d;
+          
+          // 已关注状态样式
+          &.followed {
+            background: transparent;
+            border: 1px solid #999;
+            color: #999;
+            
+            &:active {
+              background: rgba(153, 153, 153, 0.1);
+            }
+          }
+        }
+      }
+
+      // 视频网格
+      .video-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+
+        .video-item {
+          .video-thumbnail {
+            position: relative;
+            width: 100%;
+            height: 80px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 8px;
+
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              display: block;
+            }
+
+            .video-views {
+              position: absolute;
+              bottom: 4px;
+              left: 4px;
+              background-color: rgba(0, 0, 0, 0.7);
+              color: #fff;
+              font-size: 11px;
+              padding: 2px 6px;
+              border-radius: 3px;
+              display: flex;
+              align-items: center;
+              
+              &::before {
+                content: "▶";
+                margin-right: 4px;
+                font-size: 10px;
+              }
+            }
+          }
+
+          .video-title {
+            font-size: 12px;
+            color: #333;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 32px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// 响应式优化
+@media (max-width: 375px) {
+  .create-page {
+    .video-grid {
+      gap: 6px;
+
+      .video-item {
+        .video-thumbnail {
+          height: 70px;
+        }
+
+        .video-title {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}
+
+// 分割线让页面更美观，不再需要额外的卡片间距
+
+// 返回顶部按钮样式
+.adm-floating-bubble {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid #f0f0f0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  
+  &:active {
+    background: rgba(245, 245, 245, 0.9) !important;
+  }
+}
+
+// 无限滚动加载提示
+.adm-infinite-scroll {
+  padding: 20px 0;
+  text-align: center;
+  
+  .adm-infinite-scroll-content {
+    color: #999;
+    font-size: 14px;
+  }
+  
+  .adm-loading {
+    color: #ff6b9d;
+  }
+}
+
+// 下拉刷新样式
+.adm-pull-to-refresh {
+  .adm-pull-to-refresh-indicator {
+    color: #ff6b9d;
+    font-size: 14px;
+    padding: 10px 0;
+  }
+  
+  .adm-pull-to-refresh-indicator-icon {
+    .adm-loading {
+      color: #ff6b9d;
+    }
+  }
+}
+
+// 关注列表覆盖层
+.followed-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  
+  // NavBar 导航栏样式
+  .overlay-navbar {
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    
+    // 自定义 NavBar 的返回按钮颜色
+    // .adm-nav-bar-back {
+    //   color: #ff6b9d;
+    // }
+    
+    // 自定义标题样式
+    .adm-nav-bar-title {
+      font-size: 18px;
+      // font-weight: 600;
+      color: #333;
+    }
+  }
+  
+  // 内容区域
+  .overlay-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 16px;
+    
+    .followed-list {
+      .followed-item {
+        display: flex;
+        align-items: center;
+        padding: 16px 0;
+        border-bottom: 1px solid #f0f0f0;
+        
+        &:last-child {
+          border-bottom: none;
+        }
+        
+        .followed-avatar {
+          margin-right: 12px;
+          
+          .followed-avatar-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+          }
+        }
+        
+        .followed-info {
+          flex: 1;
+          
+          .followed-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+          }
+          
+          .followed-desc {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 2px;
+          }
+          
+          .followed-followers {
+            font-size: 12px;
+            color: #666;
+          }
+        }
+        
+        .follow-toggle-btn {
+          font-size: 12px;
+          padding: 6px 12px;
+          border-radius: 4px;
+          min-width: 70px;
+          
+          // 已关注状态 - 取消关注按钮灰色样式
+          &.followed {
+            color: #999 !important;
+            border-color: #999 !important;
+            
+            &:active {
+              background-color: rgba(153, 153, 153, 0.1) !important;
+            }
+          }
+          
+          // 未关注状态 - 关注按钮粉红色样式
+          &.unfollowed {
+            color: #ff6b9d !important;
+            border-color: #ff6b9d !important;
+            
+            &:active {
+              background-color: rgba(255, 107, 157, 0.1) !important;
+            }
+          }
+        }
+      }
+    }
+    
+    .empty-followed {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 50vh;
+      
+      .empty-text {
+        font-size: 16px;
+        color: #999;
+      }
+    }
+  }
+}
+
