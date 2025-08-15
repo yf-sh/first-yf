@@ -24331,3 +24331,6 @@
 {"level":"info","message":"Socket.IO 服务器已启动","timestamp":"2025-08-14 20:12:07"}
 {"level":"info","message":"Socket.IO 服务器已启动","timestamp":"2025-08-14 20:46:12"}
 {"level":"info","message":"Socket.IO 服务器已启动","timestamp":"2025-08-14 20:47:58"}
+{"level":"info","message":"Socket.IO 服务器已启动","timestamp":"2025-08-15 20:40:30"}
+{"level":"info","message":"用户 csyh (ID: 688839f718563bb24b7497f9) 已连接 Socket.IO","timestamp":"2025-08-15 20:58:02"}
+{"level":"info","message":"用户 csyh (ID: 688839f718563bb24b7497f9) 已断开 Socket.IO 连接","timestamp":"2025-08-15 20:58:03"}

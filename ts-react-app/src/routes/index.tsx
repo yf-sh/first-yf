@@ -13,7 +13,10 @@ import Login from '../pages/Login';
 import NotFound from '../pages/NotFound';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Setting from '../pages_home二级路由/Mine/setting';
-
+import EditProfile from '../pages_home二级路由/Mine/EditProfile';
+import Membership from '../pages_home二级路由/Mine/Membership';
+import FollowList from '../pages_home二级路由/Mine/FollowList';
+import UserProfile from '../pages_home二级路由/Mine/UserProfile';
 const Router = createBrowserRouter([
   
   {
@@ -47,6 +50,22 @@ const Router = createBrowserRouter([
       {
         path:'/home/mine/setting',
         element:<Setting />
+      },
+      {
+        path:'/home/mine/edit',
+        element:<EditProfile />
+      },
+      {
+        path:'/home/mine/membership',
+        element:<Membership />
+      },
+      {
+        path:'/home/mine/follow-list',
+        element:<FollowList />
+      },
+      {
+        path:'/home/mine/setting/:userId',
+        element:<UserProfile />
       },
     ]
   },

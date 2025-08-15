@@ -1,29 +1,29 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import './index.scss'
 import axios from 'axios'
-import { Avatar, Space, Dialog } from 'antd-mobile'
+import { Avatar, Space, Dialog, Toast } from 'antd-mobile'
 import {
   EditSOutline, RightOutline, StarOutline,
   UploadOutline, UndoOutline, RedoOutline, CalendarOutline,
   TextOutline, CameraOutline, PayCircleOutline,
-  SmileOutline, HeartOutline, DownlandOutline, BellOutline,
-  UserOutline, TeamOutline, SetOutline,
-  PhonebookOutline, FileOutline, GiftOutline
+  DownlandOutline, BellOutline,
 } from 'antd-mobile-icons'
 import tokenManager from '../../utils/tokenManager'
+import { getUserFollowedUps } from '../../utils/userHelper'
 import UserService from '../../services/userService'
 import { setUserStats } from '../../store/slices/userSlice'
 
 export default function Mine() {
-  const [user, setUser] = useState<any>([])
+  const [user, setUser] = useState<any>({})
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const userStats = useSelector((state: any) => state.user.userStats)
 
+
   // 退出登录处理函数
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     Dialog.confirm({
       content: '确定要退出登录吗？',
       confirmText: '确定',
@@ -43,8 +43,47 @@ export default function Mine() {
         }
       }
     })
-  }
-  const getUserInfo = async () => {
+  }, [navigate])
+  // 检查会员是否过期
+  const checkMembershipExpiry = useCallback((): { isValid: boolean; message?: string } => {
+    if (!user?.membership) {
+      return { isValid: true }; // 没有会员信息，可以开通
+    }
+
+    const { isActive, endDate } = user.membership;
+    
+    if (!isActive) {
+      return { isValid: true }; // 会员未激活，可以开通
+    }
+
+    if (endDate) {
+      const now = new Date();
+      const membershipEndDate = new Date(endDate);
+      
+      if (membershipEndDate > now) {
+        // 会员还未过期
+        const remainingDays = Math.ceil((membershipEndDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        return { 
+          isValid: false, 
+          message: `您的会员还有${remainingDays}天到期，暂无需开通新会员` 
+        };
+      }
+    }
+
+    return { isValid: true }; // 会员已过期，可以开通
+  }, [user?.membership]);
+
+  // 处理开通会员点击事件
+  const handleMembershipClick = useCallback(() => {
+    const membershipCheck = checkMembershipExpiry();
+    if (!membershipCheck.isValid) {
+      Toast.show(membershipCheck.message || '会员还未过期');
+      return;
+    }
+    navigate('/home/mine/membership');
+  }, [checkMembershipExpiry, navigate]);
+
+  const getUserInfo = useCallback(async () => {
     try {
       const token = tokenManager.getAccessToken()
       if (!token) {
@@ -62,49 +101,145 @@ export default function Mine() {
       // 获取基本用户信息
       let userData = res.data.data;
       
+      // 获取本地实际的关注数量
+      const getLocalFollowingCount = () => {
+        try {
+          const followedUps = getUserFollowedUps();
+          return followedUps.length;
+        } catch (error) {
+          console.error('获取本地关注数量失败:', error);
+          return 0;
+        }
+      };
+
       // 获取最新的统计信息
       try {
         const statsResponse = await UserService.getUserStats();
-        userData.stats = statsResponse.stats;
+        const localFollowingCount = getLocalFollowingCount();
+        
+        // 使用本地实际关注数量，其他数据使用服务器返回值
+        userData.stats = {
+          ...statsResponse.stats,
+          following: localFollowingCount // 使用本地实际关注数量
+        };
+        
         // 同步到Redux store
-        dispatch(setUserStats(statsResponse.stats));
+        dispatch(setUserStats(userData.stats));
       } catch (statsError) {
-        console.warn('获取统计信息失败，使用默认值:', statsError);
-        // 如果获取统计信息失败，使用默认值
-        if (!userData.stats) {
-          userData.stats = {
-            followers: 0,
-            following: 0,
-            videos: 0,
-            likes: 0,
-            views: 0
-          };
-          // 同步默认值到Redux store
-          dispatch(setUserStats(userData.stats));
-        }
+        console.warn('获取统计信息失败，使用本地数据:', statsError);
+        const localFollowingCount = getLocalFollowingCount();
+        
+        // 如果获取统计信息失败，使用本地数据和默认值
+        userData.stats = {
+          followers: 0,
+          following: localFollowingCount, // 使用本地实际关注数量
+          videos: 0,
+          likes: 0,
+          views: 0
+        };
+        
+        // 同步到Redux store
+        dispatch(setUserStats(userData.stats));
       }
       
       setUser(userData)
     } catch (error: any) {
       console.error('Failed to get user info:', error)
       
-      // 处理403权限错误或401认证错误
-      if (error.response?.status === 403 || error.response?.status === 401) {
-        console.log('Token可能已过期，跳转到登录页')
-        tokenManager.clearTokens()
+      // 401错误由TokenManager的拦截器自动处理，这里只处理其他错误
+      if (error.response?.status === 403) {
+        // 403是权限不足错误，不是token过期
+        console.log('权限不足')
+        // 可以显示权限不足的提示，但不需要退出登录
+      } else if (error.message === 'Token refresh failed') {
+        // 只有当TokenManager刷新失败时才跳转登录
+        console.log('Token刷新失败，跳转到登录页')
         navigate('/login')
       }
     }
-  }
+  }, [navigate, dispatch])
   
   useEffect(() => {
     getUserInfo()
-  }, [])
+    
+    // 监听storage变化，实时更新用户数据 - 使用节流
+    let storageTimeout: number | null = null;
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'user' || e.key === 'followedUps') {
+        if (storageTimeout) clearTimeout(storageTimeout);
+        storageTimeout = window.setTimeout(() => {
+          console.log('检测到存储数据变化，重新获取用户信息');
+          getUserInfo();
+        }, 300); // 300ms节流
+      }
+    };
+    
+    // 监听自定义事件（用于同一页面内的数据更新）
+    let updateTimeout: number | null = null;
+    const handleUserStatsUpdate = () => {
+      if (updateTimeout) clearTimeout(updateTimeout);
+      updateTimeout = window.setTimeout(() => {
+        console.log('检测到用户统计数据更新');
+        getUserInfo();
+      }, 200); // 200ms节流
+    };
+
+    // 监听关注状态变化
+    let followTimeout: number | null = null;
+    const handleFollowStateChange = () => {
+      if (followTimeout) clearTimeout(followTimeout);
+      followTimeout = window.setTimeout(() => {
+        console.log('检测到关注状态变化，重新获取用户信息');
+        getUserInfo();
+      }, 200); // 200ms节流
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('userStatsUpdated', handleUserStatsUpdate);
+    window.addEventListener('followStateChanged', handleFollowStateChange);
+    
+    return () => {
+      if (storageTimeout) clearTimeout(storageTimeout);
+      if (updateTimeout) clearTimeout(updateTimeout);
+      if (followTimeout) clearTimeout(followTimeout);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('userStatsUpdated', handleUserStatsUpdate);
+      window.removeEventListener('followStateChanged', handleFollowStateChange);
+    };
+  }, [getUserInfo])
+
+  // 使用 useMemo 优化用户等级显示
+  const userLevelDisplay = useMemo(() => {
+    if (!user.level) return <span>LV1</span>;
+    return user.level === 1 ? <span>LV1</span> : 
+           user.level === 2 ? <span>LV2</span> : <span>LV3</span>;
+  }, [user.level]);
+
+  // 优化导航函数
+  const handleSettingClick = useCallback(() => {
+    navigate('/home/mine/setting');
+  }, [navigate]);
+
+  const handleCreateClick = useCallback(() => {
+    navigate('/home/create');
+  }, [navigate]);
+
+  const handleFollowListClick = useCallback(() => {
+    navigate('/home/mine/follow-list');
+  }, [navigate]);
+
+  // 处理客服聊天
+  const handleCustomerServiceClick = useCallback(() => {
+    // 使用固定的客服ID跳转到聊天页面
+    const customerServiceId = 'customer-service-001';
+    navigate(`/chat/${customerServiceId}`);
+  }, [navigate]);
+
   return (
     <div className='mine-container'>
       {/* 固定的顶部区域 */}
-      <div className='fixed-header' onClick={()=>{navigate('/home/mine/setting')}}>
-        <div className='user-info'>
+      <div className='fixed-header' >
+        <div className='user-info' onClick={handleSettingClick}>
           <div className='user-info-left'>
             <Space block direction='vertical'>
               <Avatar src={user.avatar} style={{ '--size': '70px', '--border-radius': '50%' }} />
@@ -112,12 +247,16 @@ export default function Mine() {
           </div>
           <div className='user-info-center'>
             <div className='user-info-center-top'>
-              <h3>{user.username} <EditSOutline /></h3>
-              <p>
-                {user.level == 1 ? (<span>LV1</span>) : (user.level == 2 ? (<span>LV2</span>) : (<span>LV3</span>))}
-              </p>
+              <h3>{user.username || '用户'} <EditSOutline /></h3>
+              <p>{userLevelDisplay}</p>
             </div>
-            <p className='user-info-center-bottom'>正式会员</p>
+            <p 
+              className={`user-info-center-bottom ${user.membership?.isActive ? 'active' : 'inactive'}`}
+              onClick={user.membership?.isActive ? undefined : handleMembershipClick}
+              style={{ cursor: user.membership?.isActive ? 'default' : 'pointer' }}
+            >
+              {user.membership?.isActive ? '大会员' : '开通会员'}
+            </p>
           </div>
           <div className='user-info-right'>
             <p>空间<RightOutline /></p>
@@ -130,7 +269,7 @@ export default function Mine() {
             <p>动态</p>
           </div>
           <div>|</div>
-          <div>
+          <div onClick={handleFollowListClick}>
             <h3>{(userStats?.following) || (user.stats?.following) || 0}</h3>
             <p>关注</p>
           </div>
@@ -149,7 +288,7 @@ export default function Mine() {
 
       {/* 可滚动的内容区域 */}
       <div className='scrollable-content'>
-        <div className='user-menu-bottom'>
+        <div className='user-menu-bottom' onClick={handleMembershipClick}>
           <div className='user-menu-bottom-item1'>
             <h3>开通大会员</h3>
             <p>开通后可享受会员权益</p>
@@ -178,7 +317,7 @@ export default function Mine() {
           </div>
         </div>
 
-        <div className='user-video'>
+        <div className='user-video' onClick={handleCreateClick}>
           <div className='user-video-left'>
             <h3>发布你的第一个视频</h3>
             <p>分享你的创作故事，与大家一起进步！</p>
@@ -212,45 +351,13 @@ export default function Mine() {
             <p className='user-menu-item'><CameraOutline fontSize={24} color='#FF2D92' /></p>
             <p>游戏中心</p>
           </div>
-          <div>
+          <div onClick={handleMembershipClick}>
             <p className='user-menu-item'><DownlandOutline fontSize={24} color='#FF2D92' /></p>
             <p>会员中心</p>
           </div>
           <div>
             <p className='user-menu-item'><BellOutline fontSize={24} color='#FF2D92' /></p>
             <p>我的直播</p>
-          </div>
-          <div>
-            <p className='user-menu-item'><SmileOutline fontSize={24} color='#FF2D92' /></p>
-            <p>漫画</p>
-          </div>
-          <div>
-            <p className='user-menu-item'><FileOutline fontSize={24} color='#FF2D92' /></p>
-            <p>必火推广</p>
-          </div>
-          <div>
-            <p className='user-menu-item'><SetOutline fontSize={24} color='#FF2D92' /></p>
-            <p>创作中心</p>
-          </div>
-          <div>
-            <p className='user-menu-item'><TeamOutline fontSize={24} color='#FF2D92' /></p>
-            <p>社区中心</p>
-          </div>
-          <div>
-            <p className='user-menu-item'><PhonebookOutline fontSize={24} color='#FF2D92' /></p>
-            <p>能量加油站</p>
-          </div>
-          <div>
-            <p className='user-menu-item'><HeartOutline fontSize={24} color='#FF2D92' /></p>
-            <p>哔哩哔哩公益</p>
-          </div>
-          <div>
-            <p className='user-menu-item'><GiftOutline fontSize={24} color='#FF2D92' /></p>
-            <p>BW乐园</p>
-          </div>
-          <div>
-            <p className='user-menu-item'><UserOutline fontSize={24} color='#FF2D92' /></p>
-            <p>B萌投票</p>
           </div>
         </div>
 
@@ -259,7 +366,7 @@ export default function Mine() {
         </div>
         
         <div className='service-list'>
-          <div className='service-item'>
+          <div className='service-item' onClick={handleCustomerServiceClick}>
             <div className='service-left'>
               <span className='service-icon'>🎧</span>
               <span className='service-text'>联系客服</span>

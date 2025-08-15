@@ -128,8 +128,29 @@
   }
   
   .vip-badge {
-    background: #FFB800;
-    color: #fff;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    
+    &.active {
+      background: #FFB800;
+      color: #fff;
+    }
+    
+    &.inactive {
+      background: #f0f0f0;
+      color: #666;
+      cursor: pointer;
+      border: 1px solid #ddd;
+      
+      &:hover {
+        background: #FFB800;
+        color: #fff;
+        border-color: #FFB800;
+      }
+    }
   }
   
   .level-badge {

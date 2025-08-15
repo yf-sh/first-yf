@@ -83,12 +83,40 @@
     .user-info-center-bottom {
       font-size: 13px;
       font-weight: 400;
-      border: 1px solid #FF2D92;
-      color: #FF2D92;
       padding: 2px 8px;
       border-radius: 12px;
       text-align: center;
       display: inline-block;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      // 未开通会员样式
+      &.inactive {
+        border: 1px solid #FF2D92;
+        color: #FF2D92;
+        background: transparent;
+        
+        &:hover {
+          background: #FF2D92;
+          color: #fff;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 8px rgba(255, 45, 146, 0.3);
+        }
+      }
+      
+      // 已开通会员样式
+      &.active {
+        background: linear-gradient(45deg, #FFB800, #FF8C00);
+        border: 1px solid #FFB800;
+        color: #fff;
+        font-weight: 500;
+        
+        &:hover {
+          background: linear-gradient(45deg, #FF8C00, #FFB800);
+          transform: translateY(-1px);
+          box-shadow: 0 2px 8px rgba(255, 184, 0, 0.4);
+        }
+      }
     }
 
     .user-balance {
