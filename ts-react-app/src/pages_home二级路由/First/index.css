@@ -1,0 +1,459 @@
+@charset "UTF-8";
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.create-page {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+.create-page .divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e0e0e0, transparent);
+  margin: 0;
+  opacity: 0.6;
+}
+
+.create-page .tabs-container {
+  background-color: #fff;
+}
+
+.create-page .tabs-container .adm-tabs-header {
+  background-color: #fff;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.create-page .tabs-container .adm-tabs-tab {
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.create-page .tabs-container .adm-tabs-tab.adm-tabs-tab-active {
+  color: #ff6b9d;
+}
+
+.create-page .tabs-container .adm-tabs-tab.adm-tabs-tab-active .adm-tabs-tab-line {
+  background-color: #ff6b9d;
+}
+
+.create-page .recent-visited-section {
+  background-color: #fff;
+  padding: 16px 12px;
+  position: relative;
+}
+
+.create-page .recent-visited-section .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.create-page .recent-visited-section .section-header .section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.create-page .recent-visited-section .section-header .more-btn {
+  font-size: 14px;
+  color: #999;
+  cursor: pointer;
+}
+
+.create-page .recent-visited-section .section-header .more-btn:hover {
+  color: #ff6b9d;
+}
+
+.create-page .recent-visited-section .visited-list {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+  padding: 0 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.create-page .recent-visited-section .visited-list::-webkit-scrollbar {
+  display: none;
+}
+
+.create-page .recent-visited-section .visited-list .visited-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.create-page .recent-visited-section .visited-list .visited-item .visited-avatar {
+  margin-bottom: 8px;
+}
+
+.create-page .recent-visited-section .visited-list .visited-item .visited-avatar .visited-avatar-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.create-page .recent-visited-section .visited-list .visited-item .visited-name {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.create-page .recent-visited-section .visited-list .visited-item:hover .visited-name {
+  color: #ff6b9d;
+}
+
+.create-page .recent-visited-section::after {
+  content: '';
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 20px;
+  height: 80px;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.create-page .recent-visited-section.scrollable::after {
+  opacity: 1;
+}
+
+.create-page .notice-section {
+  background-color: #fff;
+  padding: 40px 12px;
+  text-align: center;
+}
+
+.create-page .notice-section .notice-title {
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.create-page .notice-section .notice-desc {
+  font-size: 14px;
+  color: #999;
+}
+
+.create-page .recommend-section {
+  margin: 0;
+  padding: 0;
+}
+
+.create-page .recommend-section .section-title {
+  background-color: #fff;
+  padding: 16px 12px 16px 9px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.create-page .recommend-section .up-card {
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+  border-top: none !important;
+  margin: 0 !important;
+}
+
+.create-page .recommend-section .up-card .adm-card-body {
+  padding: 16px 4px;
+  border-top: none !important;
+  margin: 0 !important;
+}
+
+.create-page .recommend-section .up-card:not(:first-child) {
+  margin-top: 0 !important;
+}
+
+.create-page .recommend-section .up-card:not(:last-child) {
+  margin-bottom: 0 !important;
+}
+
+.create-page .recommend-section .up-card .up-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.create-page .recommend-section .up-card .up-header .up-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.create-page .recommend-section .up-card .up-header .up-info .up-avatar {
+  width: 48px;
+  height: 48px;
+  margin-right: 12px;
+  border-radius: 50%;
+}
+
+.create-page .recommend-section .up-card .up-header .up-info .up-details {
+  flex: 1;
+}
+
+.create-page .recommend-section .up-card .up-header .up-info .up-details .up-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.create-page .recommend-section .up-card .up-header .up-info .up-details .up-desc {
+  font-size: 13px;
+  color: #999;
+}
+
+.create-page .recommend-section .up-card .up-header .follow-btn {
+  font-size: 14px;
+  padding: 4px 12px;
+  border-radius: 2px;
+  min-width: 60px;
+  border: 1px solid #ff6b9d;
+  color: #ff6b9d;
+}
+
+.create-page .recommend-section .up-card .up-header .follow-btn.followed {
+  background: transparent;
+  border: 1px solid #999;
+  color: #999;
+}
+
+.create-page .recommend-section .up-card .up-header .follow-btn.followed:active {
+  background: rgba(153, 153, 153, 0.1);
+}
+
+.create-page .recommend-section .up-card .video-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.create-page .recommend-section .up-card .video-grid .video-item .video-thumbnail {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.create-page .recommend-section .up-card .video-grid .video-item .video-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.create-page .recommend-section .up-card .video-grid .video-item .video-thumbnail .video-views {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+}
+
+.create-page .recommend-section .up-card .video-grid .video-item .video-thumbnail .video-views::before {
+  content: "▶";
+  margin-right: 4px;
+  font-size: 10px;
+}
+
+.create-page .recommend-section .up-card .video-grid .video-item .video-title {
+  font-size: 12px;
+  color: #333;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 32px;
+}
+
+@media (max-width: 375px) {
+  .create-page .video-grid {
+    gap: 6px;
+  }
+  .create-page .video-grid .video-item .video-thumbnail {
+    height: 70px;
+  }
+  .create-page .video-grid .video-item .video-title {
+    font-size: 11px;
+  }
+}
+
+.adm-floating-bubble {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid #f0f0f0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.adm-floating-bubble:active {
+  background: rgba(245, 245, 245, 0.9) !important;
+}
+
+.adm-infinite-scroll {
+  padding: 20px 0;
+  text-align: center;
+}
+
+.adm-infinite-scroll .adm-infinite-scroll-content {
+  color: #999;
+  font-size: 14px;
+}
+
+.adm-infinite-scroll .adm-loading {
+  color: #ff6b9d;
+}
+
+.adm-pull-to-refresh .adm-pull-to-refresh-indicator {
+  color: #ff6b9d;
+  font-size: 14px;
+  padding: 10px 0;
+}
+
+.adm-pull-to-refresh .adm-pull-to-refresh-indicator-icon .adm-loading {
+  color: #ff6b9d;
+}
+
+.followed-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+}
+
+.followed-overlay .overlay-navbar {
+  background-color: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.followed-overlay .overlay-navbar .adm-nav-bar-title {
+  font-size: 18px;
+  color: #333;
+}
+
+.followed-overlay .overlay-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 16px;
+}
+
+.followed-overlay .overlay-content .followed-list .followed-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.followed-overlay .overlay-content .followed-list .followed-item:last-child {
+  border-bottom: none;
+}
+
+.followed-overlay .overlay-content .followed-list .followed-item .followed-avatar {
+  margin-right: 12px;
+}
+
+.followed-overlay .overlay-content .followed-list .followed-item .followed-avatar .followed-avatar-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.followed-overlay .overlay-content .followed-list .followed-item .followed-info {
+  flex: 1;
+}
+
+.followed-overlay .overlay-content .followed-list .followed-item .followed-info .followed-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.followed-overlay .overlay-content .followed-list .followed-item .followed-info .followed-desc {
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 2px;
+}
+
+.followed-overlay .overlay-content .followed-list .followed-item .followed-info .followed-followers {
+  font-size: 12px;
+  color: #666;
+}
+
+.followed-overlay .overlay-content .followed-list .followed-item .follow-toggle-btn {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  min-width: 70px;
+}
+
+.followed-overlay .overlay-content .followed-list .followed-item .follow-toggle-btn.followed {
+  color: #999 !important;
+  border-color: #999 !important;
+}
+
+.followed-overlay .overlay-content .followed-list .followed-item .follow-toggle-btn.followed:active {
+  background-color: rgba(153, 153, 153, 0.1) !important;
+}
+
+.followed-overlay .overlay-content .followed-list .followed-item .follow-toggle-btn.unfollowed {
+  color: #ff6b9d !important;
+  border-color: #ff6b9d !important;
+}
+
+.followed-overlay .overlay-content .followed-list .followed-item .follow-toggle-btn.unfollowed:active {
+  background-color: rgba(255, 107, 157, 0.1) !important;
+}
+
+.followed-overlay .overlay-content .empty-followed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+}
+
+.followed-overlay .overlay-content .empty-followed .empty-text {
+  font-size: 16px;
+  color: #999;
+}

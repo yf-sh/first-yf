@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Toast } from 'antd-mobile';
 import { UserService } from '../services/userService';
-import type { LevelInfo as LevelInfoType, LevelConfig } from '../services/userService';
+import type { LevelInfo as LevelInfoType } from '../services/userService';
 import './LevelInfo.scss';
 
 interface LevelInfoProps {
@@ -10,19 +10,15 @@ interface LevelInfoProps {
 
 const LevelInfo: React.FC<LevelInfoProps> = ({ className }) => {
   const [levelInfo, setLevelInfo] = useState<LevelInfoType | null>(null);
-  const [loading, setLoading] = useState(true);
 
   // 获取等级信息
   const fetchLevelInfo = async () => {
     try {
-      setLoading(true);
       const info = await UserService.getLevelInfo();
       setLevelInfo(info);
     } catch (error) {
-      console.error('获取等级信息失败:', error);
+      // console.error('获取等级信息失败:', error);
       Toast.show('获取等级信息失败');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -32,26 +28,27 @@ const LevelInfo: React.FC<LevelInfoProps> = ({ className }) => {
     fetchLevelInfo();
   }, []);
 
-  if (loading || !levelInfo) {
-    return (
-      <div className={`level-info-container ${className || ''}`}>
-        <div className="loading">加载中...</div>
-      </div>
-    );
+  if (!levelInfo) {
+    return null;
   }
 
   const { currentLevelConfig, nextLevelConfig, progress, expToNext } = levelInfo;
+
+  // 安全检查：确保currentLevelConfig存在
+  if (!currentLevelConfig) {
+    return null;
+  }
 
   return (
     <div className={`level-info-container ${className || ''}`}>
       {/* 等级标题区域 */}
       <div className="level-header">
         <div className="level-badge">
-          <span className="level-text">LV{levelInfo.currentLevel}</span>
-          <span className="level-name">{currentLevelConfig.name}</span>
+          <span className="level-text">LV{levelInfo.currentLevel || 1}</span>
+          <span className="level-name">{currentLevelConfig?.name || '新手'}</span>
         </div>
         <div className="exp-info">
-          <span className="current-exp">{levelInfo.experience}</span>
+          <span className="current-exp">{levelInfo.experience || 0}</span>
           {nextLevelConfig && (
             <>
               <span className="separator"> / </span>
@@ -66,12 +63,12 @@ const LevelInfo: React.FC<LevelInfoProps> = ({ className }) => {
         <div className="progress-bar">
           <div 
             className="progress-fill" 
-            style={{ width: `${progress}%` }}
+            style={{ width: `${progress || 0}%` }}
           ></div>
         </div>
         <div className="progress-text">
           {nextLevelConfig ? (
-            <span>距离下一级还需 {expToNext} 经验</span>
+            <span>距离下一级还需 {expToNext || 0} 经验</span>
           ) : (
             <span>已达到最高等级</span>
           )}

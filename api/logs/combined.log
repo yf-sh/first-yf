@@ -24334,3 +24334,255 @@
 {"level":"info","message":"Socket.IO 服务器已启动","timestamp":"2025-08-15 20:40:30"}
 {"level":"info","message":"用户 csyh (ID: 688839f718563bb24b7497f9) 已连接 Socket.IO","timestamp":"2025-08-15 20:58:02"}
 {"level":"info","message":"用户 csyh (ID: 688839f718563bb24b7497f9) 已断开 Socket.IO 连接","timestamp":"2025-08-15 20:58:03"}
+{"level":"info","message":"Socket.IO 服务器已启动","timestamp":"2025-08-16 09:21:30"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已连接 Socket.IO","timestamp":"2025-08-16 09:23:30"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已断开 Socket.IO 连接","timestamp":"2025-08-16 09:23:32"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:27:31"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:27:31"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:27:31"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:27:31"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 09:27:31"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 09:27:31"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:27:31"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 09:27:31"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 09:27:31"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:27:32"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 09:27:33"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 09:27:33"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 09:27:33"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 09:27:33"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:29:40"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:29:40"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:29:40"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:29:40"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 09:29:40"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 09:29:41"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:29:41"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:29:41"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 09:29:41"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 09:29:41"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 09:29:41"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 09:29:43"}
+{"level":"info","message":"Socket.IO 服务器已启动","timestamp":"2025-08-16 09:38:19"}
+{"level":"info","message":"Socket.IO 服务器已启动","timestamp":"2025-08-16 09:44:47"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:46:08"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:46:08"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:46:08"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:46:08"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 09:46:09"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 09:46:09"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:46:10"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 09:46:10"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 09:46:11"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 09:46:11"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 09:46:11"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 09:46:11"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 09:46:11"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 09:46:12"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:17:47"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:17:47"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:17:47"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:17:47"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:17:48"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:17:48"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:17:49"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:17:49"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:17:49"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:17:50"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:17:50"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:17:50"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:17:50"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:18:44"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已连接 Socket.IO","timestamp":"2025-08-16 10:19:52"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:19:57"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已连接 Socket.IO","timestamp":"2025-08-16 10:20:19"}
+{"callType":"video","fromUserId":null,"fromUsername":null,"level":"info","message":"收到来自用户 test2 (ID: 688b1911dd0be9e6850befac) 的通话请求:","offer":{"sdp":"temp-sdp","type":"offer"},"targetUserId":"customer-service-001","timestamp":"2025-08-16 10:20:36"}
+{"callType":"video","fromUserId":null,"fromUsername":null,"level":"info","message":"收到来自用户 test2 (ID: 688b1911dd0be9e6850befac) 的通话请求:","offer":{"sdp":"temp-sdp","type":"offer"},"targetUserId":"customer-service-001","timestamp":"2025-08-16 10:20:36"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 结束通话","timestamp":"2025-08-16 10:20:38"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:20:40"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:20:45"}
+{"level":"info","message":"转换后的ObjectId: 688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:20:45"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:20:45"}
+{"level":"info","message":"转换后的ObjectId: 688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:20:45"}
+{"level":"info","message":"聚合查询结果: 0 个会话","timestamp":"2025-08-16 10:20:46"}
+{"level":"info","message":"未找到会话数据，返回空列表","timestamp":"2025-08-16 10:20:46"}
+{"level":"info","message":"聚合查询结果: 0 个会话","timestamp":"2025-08-16 10:20:46"}
+{"level":"info","message":"未找到会话数据，返回空列表","timestamp":"2025-08-16 10:20:46"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:20:46"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:20:46"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:20:46"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:20:46"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已连接 Socket.IO","timestamp":"2025-08-16 10:20:46"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:20:50"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已连接 Socket.IO","timestamp":"2025-08-16 10:20:55"}
+{"level":"info","message":"收到来自用户 test2 (ID: 688b1911dd0be9e6850befac) 的私信: 1111","targetUserId":"test-user-2","timestamp":"2025-08-16 10:20:59","type":"text"}
+{"_message":"Message validation failed","errors":{"receiver":{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"test-user-2\" (type string) at path \"receiver\" because of \"BSONError\"","name":"CastError","path":"receiver","reason":{},"stringValue":"\"test-user-2\"","value":"test-user-2","valueType":"string"}},"level":"error","message":"保存私信到数据库失败: Message validation failed: receiver: Cast to ObjectId failed for value \"test-user-2\" (type string) at path \"receiver\" because of \"BSONError\"","stack":"ValidationError: Message validation failed: receiver: Cast to ObjectId failed for value \"test-user-2\" (type string) at path \"receiver\" because of \"BSONError\"\n    at Document.invalidate (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\document.js:3358:32)\n    at model.$set (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\document.js:1480:12)\n    at model.$set (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\document.js:1132:16)\n    at model.Document (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\document.js:178:12)\n    at model.Model (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\model.js:127:12)\n    at new model (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\model.js:4826:15)\n    at D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\model.js:2775:20\n    at Array.map (<anonymous>)\n    at Function.create (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\model.js:2763:34)\n    at SocketIOService.handlePrivateMessage (D:\\桌面\\2\\first-yf\\api\\utils\\socketio.js:179:42)","timestamp":"2025-08-16 10:20:59"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:21:02"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:21:16"}
+{"level":"info","message":"转换后的ObjectId: 688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:21:16"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:21:16"}
+{"level":"info","message":"转换后的ObjectId: 688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:21:16"}
+{"level":"info","message":"聚合查询结果: 0 个会话","timestamp":"2025-08-16 10:21:17"}
+{"level":"info","message":"未找到会话数据，返回空列表","timestamp":"2025-08-16 10:21:17"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:21:17"}
+{"level":"info","message":"聚合查询结果: 0 个会话","timestamp":"2025-08-16 10:21:17"}
+{"level":"info","message":"未找到会话数据，返回空列表","timestamp":"2025-08-16 10:21:17"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:21:17"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:21:17"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:21:17"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已连接 Socket.IO","timestamp":"2025-08-16 10:21:17"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:21:17"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已连接 Socket.IO","timestamp":"2025-08-16 10:21:17"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:21:21"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:21:24"}
+{"level":"info","message":"转换后的ObjectId: 688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:21:24"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:21:24"}
+{"level":"info","message":"转换后的ObjectId: 688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:21:24"}
+{"level":"info","message":"聚合查询结果: 0 个会话","timestamp":"2025-08-16 10:21:25"}
+{"level":"info","message":"未找到会话数据，返回空列表","timestamp":"2025-08-16 10:21:25"}
+{"level":"info","message":"聚合查询结果: 0 个会话","timestamp":"2025-08-16 10:21:25"}
+{"level":"info","message":"未找到会话数据，返回空列表","timestamp":"2025-08-16 10:21:25"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:21:25"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:21:25"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:21:25"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已连接 Socket.IO","timestamp":"2025-08-16 10:21:26"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:21:26"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:21:26"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已连接 Socket.IO","timestamp":"2025-08-16 10:21:26"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:21:33"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已连接 Socket.IO","timestamp":"2025-08-16 10:22:04"}
+{"level":"info","message":"收到来自用户 test2 (ID: 688b1911dd0be9e6850befac) 的私信: 1111","targetUserId":"customer-service-001","timestamp":"2025-08-16 10:22:07","type":"text"}
+{"_message":"Message validation failed","errors":{"receiver":{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"customer-service-001\" (type string) at path \"receiver\" because of \"BSONError\"","name":"CastError","path":"receiver","reason":{},"stringValue":"\"customer-service-001\"","value":"customer-service-001","valueType":"string"}},"level":"error","message":"保存私信到数据库失败: Message validation failed: receiver: Cast to ObjectId failed for value \"customer-service-001\" (type string) at path \"receiver\" because of \"BSONError\"","stack":"ValidationError: Message validation failed: receiver: Cast to ObjectId failed for value \"customer-service-001\" (type string) at path \"receiver\" because of \"BSONError\"\n    at Document.invalidate (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\document.js:3358:32)\n    at model.$set (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\document.js:1480:12)\n    at model.$set (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\document.js:1132:16)\n    at model.Document (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\document.js:178:12)\n    at model.Model (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\model.js:127:12)\n    at new model (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\model.js:4826:15)\n    at D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\model.js:2775:20\n    at Array.map (<anonymous>)\n    at Function.create (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\model.js:2763:34)\n    at SocketIOService.handlePrivateMessage (D:\\桌面\\2\\first-yf\\api\\utils\\socketio.js:179:42)","timestamp":"2025-08-16 10:22:07"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:22:09"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已连接 Socket.IO","timestamp":"2025-08-16 10:22:12"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:22:13"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已连接 Socket.IO","timestamp":"2025-08-16 10:22:33"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:22:36"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已连接 Socket.IO","timestamp":"2025-08-16 10:22:49"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:22:52"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:23:00"}
+{"level":"info","message":"转换后的ObjectId: 688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:23:00"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:23:00"}
+{"level":"info","message":"转换后的ObjectId: 688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:23:00"}
+{"level":"info","message":"聚合查询结果: 0 个会话","timestamp":"2025-08-16 10:23:01"}
+{"level":"info","message":"未找到会话数据，返回空列表","timestamp":"2025-08-16 10:23:01"}
+{"level":"info","message":"聚合查询结果: 0 个会话","timestamp":"2025-08-16 10:23:01"}
+{"level":"info","message":"未找到会话数据，返回空列表","timestamp":"2025-08-16 10:23:01"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:23:01"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688b1911dd0be9e6850befac","timestamp":"2025-08-16 10:23:01"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:23:01"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:23:01"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已连接 Socket.IO","timestamp":"2025-08-16 10:23:01"}
+{"level":"info","message":"用户 test2 (ID: 688b1911dd0be9e6850befac) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:23:02"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:24:49"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:24:49"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:24:49"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:24:49"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:24:49"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:24:49"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:24:49"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:24:49"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:24:49"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:24:49"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:24:49"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:24:51"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:24:51"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:24:59"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:24:59"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:24:59"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:24:59"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:24:59"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:25:00"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:25:00"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:00"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:00"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:25:00"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:25:00"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:25:00"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:25:01"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:20"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:20"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:20"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:20"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:25:21"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:25:21"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:21"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:21"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:25:21"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:25:21"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:25:21"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:25:26"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:33"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:33"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:33"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:33"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:25:33"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:25:33"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:34"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:34"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:25:34"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:25:34"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:25:34"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:25:34"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:25:34"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:25:36"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:25:36"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:25:38"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:38"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:38"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:38"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:38"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:25:40"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:25:40"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:40"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:25:41"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:25:41"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:25:41"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:41"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:41"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:41"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:41"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:25:41"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:25:41"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:42"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:42"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:25:42"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:25:42"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:25:42"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:25:42"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:25:42"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:25:42"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:25:42"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:25:42"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:25:43"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:25:44"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:25:44"}
+{"callType":"video","fromUserId":null,"fromUsername":null,"level":"info","message":"收到来自用户 test (ID: 688ae2c4dd0be9e6850befab) 的通话请求:","offer":{"sdp":"temp-sdp","type":"offer"},"targetUserId":"688839f718563bb24b7497f9","timestamp":"2025-08-16 10:25:51"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 结束通话","timestamp":"2025-08-16 10:26:08"}
+{"callType":"audio","fromUserId":null,"fromUsername":null,"level":"info","message":"收到来自用户 test (ID: 688ae2c4dd0be9e6850befab) 的通话请求:","offer":{"sdp":"temp-sdp","type":"offer"},"targetUserId":"688839f718563bb24b7497f9","timestamp":"2025-08-16 10:26:20"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 结束通话","timestamp":"2025-08-16 10:26:23"}
+{"level":"info","message":"收到来自用户 test (ID: 688ae2c4dd0be9e6850befab) 的私信: 😍","targetUserId":"688839f718563bb24b7497f9","timestamp":"2025-08-16 10:26:48","type":"text"}
+{"level":"error","message":"保存私信到数据库失败: Document.prototype.populate() no longer accepts a callback","stack":"MongooseError: Document.prototype.populate() no longer accepts a callback\n    at model.populate (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\document.js:4584:11)\n    at SocketIOService.handlePrivateMessage (D:\\桌面\\2\\first-yf\\api\\utils\\socketio.js:188:26)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-08-16 10:26:48"}
+{"level":"info","message":"收到来自用户 test (ID: 688ae2c4dd0be9e6850befab) 的私信: 你好","targetUserId":"688839f718563bb24b7497f9","timestamp":"2025-08-16 10:27:06","type":"text"}
+{"level":"error","message":"保存私信到数据库失败: Document.prototype.populate() no longer accepts a callback","stack":"MongooseError: Document.prototype.populate() no longer accepts a callback\n    at model.populate (D:\\桌面\\2\\first-yf\\api\\node_modules\\mongoose\\lib\\document.js:4584:11)\n    at SocketIOService.handlePrivateMessage (D:\\桌面\\2\\first-yf\\api\\utils\\socketio.js:188:26)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-08-16 10:27:07"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:27:08"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:27:08"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:27:08"}
+{"level":"info","message":"获取会话列表 - 请求参数: page=1, limit=10, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:27:08"}
+{"level":"info","message":"转换后的ObjectId: 688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:27:08"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:27:09"}
+{"level":"info","message":"聚合查询结果: 1 个会话","timestamp":"2025-08-16 10:27:09"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:27:09"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:27:09"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:27:09"}
+{"level":"info","message":"获取系统消息 - 请求参数: page=1, limit=20, userId=688ae2c4dd0be9e6850befab","timestamp":"2025-08-16 10:27:10"}
+{"level":"info","message":"找到 0 条系统消息，总数: 0","timestamp":"2025-08-16 10:27:11"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:27:11"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:27:11"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:27:12"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:27:20"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:27:25"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:27:28"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:27:33"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已连接 Socket.IO","timestamp":"2025-08-16 10:28:08"}
+{"level":"info","message":"用户 test (ID: 688ae2c4dd0be9e6850befab) 已断开 Socket.IO 连接","timestamp":"2025-08-16 10:28:09"}

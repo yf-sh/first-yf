@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { NavBar, TabBar, Button } from 'antd-mobile';
 import {
   AppOutline,
@@ -10,6 +10,7 @@ import {
 import './Home.scss';
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentUser, setCurrentUser] = useState<any>(null);
 
   const tabs = [
@@ -47,33 +48,20 @@ const Home: React.FC = () => {
     }
   }, []);
 
-  // 处理登出
-  const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('user');
-    localStorage.removeItem('accessToken');
-    navigate('/login');
-  };
+
   return (
     <div className="home-page">
-      {/* <div className="home-header">
-        <h1>欢迎回来，{currentUser?.nickname || currentUser?.username || '用户'}！</h1>
-        <Button 
-          size="small" 
-          color="danger" 
-          fill="outline"
-          onClick={handleLogout}
-        >
-          登出
-        </Button>
-      </div> */}
       
       <div className="home-content">
         <Outlet />
       </div>
       
       <div className="home-footer">
-        <TabBar onChange={(key) => navigate(key)} style={{position: 'fixed', bottom: 0, left: 0, right: 0,backgroundColor: '#fff'}}>
+        <TabBar 
+          activeKey={location.pathname}
+          onChange={(key) => navigate(key)} 
+          style={{position: 'fixed', bottom: 0, left: 0, right: 0,backgroundColor: '#fff'}}
+        >
           {tabs.map(item => (
             <TabBar.Item key={item.key} icon={item.icon} title={item.title} />
           ))}

@@ -3,7 +3,7 @@ import styles from '../styles/login.module.css'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import tokenManager from '../utils/tokenManager'
-import { awardExp } from '../utils/experienceManager'
+import { awardDailyLoginExp } from '../utils/experienceManager'
 
 export default function login() {
     const [loginid, setloginid] = useState('')
@@ -88,11 +88,11 @@ export default function login() {
                 localStorage.setItem('user', JSON.stringify(user));
                 // localStorage.setItem('isLoggedIn', 'true')
                 
-                // 奖励登录经验值
-                awardExp('LOGIN');
+                // 奖励每日登录经验值（一天只能获得一次）
+                awardDailyLoginExp();
                 
                 alert(response.data.msg);
-                router('/home');
+                router('/home/first');
             } else {
                 alert(response.data.msg);
                 setPassword('');

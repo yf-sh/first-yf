@@ -21,12 +21,15 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
                 // 验证token是否有效
                 const isValid = await tokenManager.verifyToken();
-                if (!isValid) {
+                if (isValid.code !== 200) {
                     // 尝试刷新token
                     const newToken = await tokenManager.refreshAccessToken();
                     if (!newToken) {
+                        console.log('Token刷新失败，跳转到登录页');
                         router('/login');
                         return;
+                    } else {
+                        console.log('Token刷新成功');
                     }
                 }
                 setIsAuthenticated(true);

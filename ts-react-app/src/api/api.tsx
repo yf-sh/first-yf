@@ -54,7 +54,7 @@ instance.interceptors.request.use(
       };
     }
 
-    console.log('Request:', config);
+    // console.log('Request:', config);
     return config;
   },
   (error: AxiosError) => {
@@ -66,7 +66,7 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   (response: AxiosResponse<ApiResponse>) => {
-    console.log('Response:', response);
+    // console.log('Response:', response);
     
     const { data } = response;
     
@@ -118,21 +118,18 @@ instance.interceptors.response.use(
         case 400:
           apiError = {
             code: status,
-            message: '请求参数错误',
+            message: (data as any)?.msg || '请求参数错误',
             data,
           };
           break;
         case 401:
           apiError = {
             code: status,
-            message: '未授权，请重新登录',
+            message: '认证失败',
             data,
           };
-          // 清除token并跳转到登录页
-          tokenManager.clearTokens();
-          if (typeof window !== 'undefined') {
-            window.location.href = '/login';
-          }
+          // 401错误已由TokenManager的拦截器处理，这里不再手动处理
+          // TokenManager会自动尝试刷新token，只有刷新失败时才会跳转登录
           break;
         case 403:
           apiError = {
